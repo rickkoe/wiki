@@ -9,7 +9,7 @@ dateCreated: 2022-02-05T18:22:09.505Z
 ---
 
 # Documentation Links
-- [Broadcom SSupport Portal *Click on **Brocade Storage Networking** in Header*](https://support.broadcom.com) 
+- [Broadcom Support Portal *Click on **Brocade Storage Networking** in Header*](https://support.broadcom.com) 
 - [Brocade FOS Administration Guide, 9.0.x](https://docs.broadcom.com/doc/FOS-90x-Admin-AG)
 - [Brocade FOS Command Reference Manual, 9.0.x](https://docs.broadcom.com/doc/FOS-90x-Command-RM)
 {.links-list}
