@@ -1,0 +1,58 @@
+<!--
+title: Planning for IBM Storage Insights
+description: 
+published: true
+date: 2023-01-22T20:01:42.960Z
+tags: ibm, storage insights, monitoring
+editor: ckeditor
+dateCreated: 2022-02-16T22:29:28.883Z
+-->
+
+<h1>Register for IBM Storage Insights</h1>
+<p><a href="https://www.ibm.com/it-infrastructure/storage/storage-insights/register">IBM Storage Insights Registration</a></p>
+<p>All IBM storage includes a free instance of IBM Storage Insights.&nbsp; If you do not own Spectrum Control licenses, then use this link to register for IBM Storage Insights.&nbsp; Use this link if you purchased the "Pro" version of Storage Insights as well.</p>
+<p><a href="https://www.ibm.com/it-infrastructure/storage/storage-insights/register-spectrum-control/">IBM Storage Insights for Spectrum Control Registration</a></p>
+<p>If you’re an IBM Spectrum Control customer you’re eligible for IBM Storage Insights for IBM Spectrum Control—monitoring that delivers even more information about your IBM storage performance, capacity, and configuration metadata and includes alerts for storage systems requiring attention.</p>
+<h1>Getting Started</h1>
+<p>Full instructions can be found on <a href="https://www.ibm.com/support/knowledgecenter/SSQRB8/com.ibm.spectrum.si.doc/tpch_saas_container_r_getting_started.html">IBM Knowledge Center</a></p>
+<ol>
+  <li>Deploy one or more metadata collectors (for redundancy or to optimize collection from data centers in different locations).<ul>
+      <li>Provide at least 1 GB of RAM and 3 GB of disk space</li>
+      <li>Operating System Options:<ul>
+          <li>Windows Server 2012 and later</li>
+          <li>AIX versions 7.x and later on POWER6 or later systems</li>
+          <li>x86-64 RHEL6 and later</li>
+          <li>CentOS 6 and later</li>
+          <li>PPC64LE: POWER8 with RHEL7</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Allow outbound communication for metadata collector VM on port 443 using TCP</li>
+  <li>If not already done, <a href="onenote:#IBM%20Storage%20Insights&amp;section-id={FD2B69C0-AC74-4452-91FE-7545DB22F53D}&amp;page-id={F0A22ED6-A03A-4535-AD29-DB7199738A54}&amp;object-id={F638023F-3D45-0DE1-3194-EA2BE7376DAC}&amp;25&amp;base-path=https://evolvingsolutions.sharepoint.com/sites/technology/SiteAssets/Technology%20Notebook/Storage/IBM%20FlashSystem%20and%20SVC.one">Register for IBM Storage Insights</a></li>
+  <li>Wait up to 24 hours for your instance to be created</li>
+  <li>Log in to your instance and <a href="https://www.ibm.com/support/knowledgecenter/SSQRB8/com.ibm.spectrum.si.doc/tpch_saas_t_data_collector_welcome_wizard.html">download/deploy metadata collectors</a></li>
+  <li><a href="https://www.ibm.com/support/knowledgecenter/SSQRB8/com.ibm.spectrum.si.doc/tpch_saas_t_container_adding_ssystems.html">Add your storage to IBM Storage Insights</a></li>
+</ol>
+<h1>Security Considerations</h1>
+<p><a href="https://www.ibm.com/support/knowledgecenter/SSQRB8/com.ibm.spectrum.si.doc/IBM_Storage_Insights_Security_Guide.pdf?view=kc">IBM Storage Insights Security Guide</a></p>
+<ul>
+  <li>Firewall Port 443 (outbound) communication required for metadata collector</li>
+  <li>#IBMCloud service</li>
+  <li>ISO/IEC 27001/27017/27018 ISM certified</li>
+  <li>Communication is one way, encrypted and compressed</li>
+  <li>Data at rest is AES 256-bit encrypted</li>
+  <li>Only metadata about your storage is collected</li>
+  <li>Personal, identity, and application data are never accessed</li>
+  <li>HIPAA / Blue Diamond ready</li>
+  <li>Meets the requirements of GDPR</li>
+</ul>
+<h1>Links to IBM Resources</h1>
+<ul>
+  <li><a href="https://www.ibm.com/products/analytics-driven-data-management">Product Page on IBM.com</a></li>
+  <li><a href="https://www.ibm.com/support/knowledgecenter/SSQRB8/com.ibm.spectrum.si.doc/tpch_saas_container_r_getting_started.html">Getting Started Guide</a></li>
+  <li><a href="https://www.ibm.com/downloads/cas/A8XQ4AZJ">IBM Storage Insights Data Sheet</a></li>
+  <li><a href="https://www.redbooks.ibm.com/abstracts/redp5231.html?Open=">Redbook: IBM Storage Insights</a></li>
+  <li><a href="https://www.ibm.com/support/knowledgecenter/SSQRB8/com.ibm.spectrum.si.doc/IBM_Storage_Insights_Security_Guide.pdf?view=kc">IBM Storage Insights Security Guide</a></li>
+  <li><a href="https://www.ibm.com/docs/en/storage-insights?topic=started-adding-removing-users">Adding and removing users - IBM Documentation</a></li>
+</ul>
