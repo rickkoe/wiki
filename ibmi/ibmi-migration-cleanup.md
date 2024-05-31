@@ -2,7 +2,7 @@
 title: IBMi Migration Cleanup Steps
 description: 
 published: true
-date: 2023-01-22T15:58:55.721Z
+date: 2024-05-31T16:09:38.790Z
 tags: ibmi, migration, cleanup
 editor: markdown
 dateCreated: 2023-01-22T14:31:03.489Z
@@ -27,6 +27,7 @@ From DST main menu:
 - Option  2 License Internal Code (LIC) data
 - Option 14 Advance Analysis
 - 3 page downs, "1" on MULTIPATHRESETTER (enter)
+- Use options "-resetmp -all" (enter)
 - Use options "-confirm -all" (enter)
 
 *Results will show and success at the end*
