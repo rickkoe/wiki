@@ -2,140 +2,206 @@
 title: IBM FlashSystem Storage
 description: 
 published: true
-date: 2023-09-13T20:58:16.518Z
+date: 2024-07-11T04:53:09.859Z
 tags: ibm, storage, flashsystem
 editor: markdown
 dateCreated: 2023-01-22T14:49:57.535Z
 ---
 
-# Documentation Links
-## Support Information
-Find configuration limits and restrictions, release notes, and product documentation for IBM FlashSystem storage. 
+# IBM FlashSystem
+## Documentation Links
+### Support Information
+
+Find configuration limits and restrictions, release notes, and product documentation for IBM FlashSystem storage.
+
 - [Support Information for FlashSystem 9500](https://www.ibm.com/support/pages/support-information-flashsystem-9500)
 - [Support Information for FlashSystem 9200](https://www.ibm.com/support/pages/support-information-flashsystem-9200)
 - [Support Information for FlashSystem 7300](https://www.ibm.com/support/pages/support-information-flashsystem-7300)
 - [Support Information for FlashSystem 7200](https://www.ibm.com/support/pages/support-information-flashsystem-7200)
 - [Support Information for FlashSystem 5000 and 5200](https://www.ibm.com/support/pages/node/6408990)
-{.links-list}
 
-## Implementation Guide
+
+### Implementation Guide
 *A great reference to use during initial implementation of a new FlashSystem*
--   [Implementation Guide for IBM Spectrum Virtualize Version 8.5](https://www.redbooks.ibm.com/abstracts/sg248520.html)
-{.links-list}
 
-## Best Practices Guide
+- [Implementation Guide for IBM Storage Virtualize Version 8.6](https://www.redbooks.ibm.com/redpieces/abstracts/sg248542.html)
+
+
+### Best Practices Guide
 *Use these guides to ensure you are following best practices for zoning, copy services, host connectivity, etc.*
--   [IBM FlashSystem Best Practices and Performance Guidelines](https://www.redbooks.ibm.com/abstracts/sg248503.html)
--   [Performance and Best Practices Guide for IBM Spectrum Virtualize 8.5](https://www.redbooks.ibm.com/abstracts/sg248521.html)
-{.links-list}
 
-*Use this next guide to ensure you are following best practices when connecting to VMware*
--   [IBM FlashSystem and VMware Implementation and Best Practices Guide](http://www.redbooks.ibm.com/abstracts/sg248505.html?Open)
-{.links-list}
+- [Performance and Best Practices Guide for IBM Storage Virtualize 8.6](https://www.redbooks.ibm.com/redpieces/abstracts/sg248543.html)
+- [IBM FlashSystem and VMware Implementation and Best Practices Guide](https://www.redbooks.ibm.com/redpieces/abstracts/sg248549.html)
 
-## Microcode Guidance
+
+### Microcode Guidance
 *If you are upgrading microcode, use this link to determine the latest (LTS) recommended code level along with other levels that are available (non-LTS)*
--   [Recommended Code Levels](https://www.ibm.com/support/pages/spectrum-virtualize-family-products-upgrade-planning)
-{.links-list}
+
+- [Recommended Code Levels](https://www.ibm.com/support/pages/ibm-storage-virtualize-family-products-upgrade-planning)
+- [Supported Drive Types and Firmware Levels](https://www.ibm.com/support/pages/node/873170)
+- [Download Microcode from IBM Fix Central](https://www.ibm.com/support/fixcentral)
+
 
 *This link will show if you are able to upgrade directly to another code level, or if you have to upgrade in two steps.*
--   [Concurrent Code Upgrade Paths](https://www.ibm.com/support/pages/node/5692850)
-{.links-list}
 
-## Other Stuff
--   [CSM ESE Sizer](https://www.ibm.com/support/pages/node/6372180)
+- [Concurrent Code Upgrade Paths](https://www.ibm.com/support/pages/node/5692850)
+
+
+### Other Stuff
+- [CSM ESE Sizer](https://www.ibm.com/support/pages/node/6372180)
+- [Ansible and IBM Storage](https://www.ansible.com/integrations/infrastructure/ibm-storage)
 -	[IBM Storage Ansible Modules](https://galaxy.ansible.com/ibm/spectrum_virtualize)
--   [Enable the VMware iSER Adapter](https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-4F2C10BB-3705-4040-BFDE-A190FE273060.html)
--   [Vdbench Downloads and User Guide](https://www.oracle.com/downloads/server-storage/vdbench-downloads.html)
-{.links-list}
+- [Enable the VMware iSER Adapter](https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-4F2C10BB-3705-4040-BFDE-A190FE273060.html)
+- [Vdbench Downloads and User Guide](https://www.oracle.com/downloads/server-storage/vdbench-downloads.html)
 
-# Implementation
-- [Implementation Guide for IBM Spectrum Virtualize Version 8.5](https://www.redbooks.ibm.com/redpieces/pdfs/sg248520.pdf)
-- [Host Configuration Best Practices](/ibm-flashsystem/flashsystem-host-configuration)
-- [Spectrum Virtualize Support Center Addresses](/storage/ibm/flashsystem/support-addresses)
-{.links-list}
 
-## Implementation Checklist
+## Cheat Sheet
+
+- List current date and time
+
+        svqueryclock
+
+- Recover offline volumes (i/o group went offline and lose cache)
+
+        recovervdiskbysystem
+
+- Manually resuming code activation
+
+        lsupdate
+        applysoftware -continue
+
+- Restart Web Service
+
+        satask restartservice -service tomcat
+        
+- IP Replication requires the following firewall ports opened:
+
+    - Cluster IPs: 3260
+    - Data IPs: 3265
+
+- Script to Rename Volumes
+
+        lsvdisk -nohdr | grep -v scsi | while read -a line ; do new_name=${line[1]//msc520/bscbak};new_name=${new_name%_01} ; chvdisk -name $new_name ${line[1]}; done
+
+- Script to validate cabling
+
+        lsportfc -nohdr | while read -a port; do printf "%s,port%s," "${port[6]}" "${port[2]}"; lsportfc "${port[0]}" | grep fabric_WWN ; done
+
+
+## Implementation
+
+### Implementation Checklist
 > This is not an official instruction manual from IBM.  Alway refer to the latest IBM docs if you are unsure about how to complete a step in the list below.{.is-info}
 
 The following items are a summary of the most common steps that need to be completed on every implementation.  Some items may not pertain to specific hardware configs (e.g. IP replication), but verifying installs using this list will cover the most critical aspects of a thorough implementation.
 
--   <input type="checkbox"/> Rack and Stack
--   <input type="checkbox"/> Power Up
--   <input type="checkbox"/> Configure cluster using the [technician port](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=system-initializing-technician-port-ssr-task)
--   <input type="checkbox"/> Use a web browser to open: *https://your\_management\_IP*
--   <input type="checkbox"/> Log in to the management GUI for the first time by using ID *superuser* and password *passw0rd*.
--   <input type="checkbox"/> After you log in, the initial setup wizard helps you get started.  Use the information on your [worksheets](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=planning-worksheets) to inform your inputs.
-    -   <input type="checkbox"/> Welcome
-    -   <input type="checkbox"/> License Agreement
-    -   <input type="checkbox"/> Change Password
-    -   <input type="checkbox"/> System Name
-    -   <input type="checkbox"/> Licensed Functions
-    -   <input type="checkbox"/> Date and Time
-    -   <input type="checkbox"/> Encryption (license required)
-    -   <input type="checkbox"/> Call Home
-    -   <input type="checkbox"/> Storage Insights
-    -   <input type="checkbox"/> Support Assistance
-    -   <input type="checkbox"/> Automatic Configuration
-    -   <input type="checkbox"/> Summary
--   <input type="checkbox"/> Add additional Control or Expansion Enclosures (if required)
--   <input type="checkbox"/> Configure the following:
-    -   <input type="checkbox"/> [Set the Service IPs](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=problem-procedure-changing-service-ip-address-node-canister)
-    -   <input type="checkbox"/> Ethernet IPs for ISCSI or IP replication
-    -   <input type="checkbox"/> [Ethernet Portsets](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=overview-portsets)
-    -   <input type="checkbox"/> [Volume Protection](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=volumes-volume-protection) (recommend leaving on)
-    -   <input type="checkbox"/> Call Home / Email Notifications
-    -   <input type="checkbox"/> SNMP
-    -   <input type="checkbox"/> Syslog
-    -   <input type="checkbox"/> LDAP (if desired)
--   <input type="checkbox"/> Enable Encryption ([USB](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=management-enabling-encryption-usb-flash-drives) or [SKLM](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=management-enabling-encryption-key-servers))
--   <input type="checkbox"/> Create encrypted pool with data reduction turned off and 1024 extent size (default in GUI)
--   <input type="checkbox"/> Add storage to the pool (DRAID6, typically take all defaults in GUI).
--   <input type="checkbox"/> Modify I/O Group bitmap space (CLI or now in GUI of newer code)
--   <input type="checkbox"/> Modify fibre channel port masking (if needed for replication)
--   <input type="checkbox"/> [Update System Software](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=updating-system-software)
--   <input type="checkbox"/> [Update Drive Firmware](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=software-updating-drive-firmware)
-## Spectrum Virtualize Remote Support IP Addresses
+- <input type="checkbox"/> Power Up
+- <input type="checkbox"/> Configure cluster using the [technician port](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=system-initializing-technician-port-ssr-task)
+- <input type="checkbox"/> Use a web browser to open: *https://your\_management\_IP*
+- <input type="checkbox"/> Log in to the management GUI for the first time by using ID *superuser* and password *passw0rd*.
+- <input type="checkbox"/> After you log in, the initial setup wizard helps you get started.  Use the information on your [worksheets](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=planning-worksheets) to inform your inputs.
+    - <input type="checkbox"/> Welcome
+    - <input type="checkbox"/> License Agreement
+    - <input type="checkbox"/> Change Password
+    - <input type="checkbox"/> System Name
+    - <input type="checkbox"/> Licensed Functions
+    - <input type="checkbox"/> Date and Time
+    - <input type="checkbox"/> Encryption (license required)
+    - <input type="checkbox"/> Call Home
+    - <input type="checkbox"/> Storage Insights
+    - <input type="checkbox"/> Support Assistance
+    - <input type="checkbox"/> Automatic Configuration
+    - <input type="checkbox"/> Summary
+- <input type="checkbox"/> Add additional Control or Expansion Enclosures (if required)
+- <input type="checkbox"/> Configure the following:
+    - <input type="checkbox"/> [Set the Service IPs](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=problem-procedure-changing-service-ip-address-node-canister)
+    - <input type="checkbox"/> Ethernet IPs for ISCSI or IP replication
+    - <input type="checkbox"/> [Ethernet Portsets](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=overview-portsets)
+    - <input type="checkbox"/> [Volume Protection](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=volumes-volume-protection) (recommend leaving on)
+    - <input type="checkbox"/> Call Home / Email Notifications
+    - <input type="checkbox"/> SNMP
+    - <input type="checkbox"/> Syslog
+    - <input type="checkbox"/> LDAP (if desired)
+- <input type="checkbox"/> Enable Encryption ([USB](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=management-enabling-encryption-usb-flash-drives) or [SKLM](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=management-enabling-encryption-key-servers))
+- <input type="checkbox"/> Create encrypted pool with data reduction turned off and 1024 extent size (default in GUI)
+- <input type="checkbox"/> Add storage to the pool (DRAID6, typically take all defaults in GUI).
+- <input type="checkbox"/> Modify I/O Group bitmap space (CLI or now in GUI of newer code)
+- <input type="checkbox"/> Modify fibre channel port masking (if needed for replication)
+- <input type="checkbox"/> [Update System Software](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=updating-system-software)
+- <input type="checkbox"/> [Update Drive Firmware](https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=software-updating-drive-firmware)
 
-### **Abstract**
 
-The Remote Support feature that allows IBM to remotely connect to Spectrum Virtualize products requires the device to initiate a connection back to IBM on a set of fixed IP addresses. The IP addresses used for this feature are changing in 2022.  
-  
-Important Update: The deadline for making this update is now earlier than previously announced. More details in the content section.  
-  
-Clients that use Remote Support need to update their product and any firewall, HTTP proxies, or Remote Support proxies to continue to use Remote Support without interruption.  
-  
-A number of other IBM Storage products are also affected by this change. Links to details about the other products are included at the end of the document.
+### Port Planning
+#### Planning for more than four fabric ports per node canister
+Last Updated: 2023-06-08
 
-### **Content**
+You can use more than four fabric ports per to improve peak load I/O performance, but careful planning is needed.
 
-To continue to allow IBM to provide remote support for your Spectrum Virtualize system, you need to make some changes to your environment before the end of December 2022.
+A *fabric port* is a Fibre Channel port. If you use more than four fabric ports per node, you must either use the **localfcportmask** and **partnerfcportmask** commands or be careful with your fabric zoning configuration.
 
-**Update:** Due to an unexpected infrastructure change there will only be a single, non-redundant, remote support server available to support clients between 1 November 2022 and 31 December 2022.  Clients are advised to update their environments to use the new servers before the end of October.
+Careful zoning improves resilience and prevents lease expires due to port errors, low fabric buffer credits, shared adapter resources, or push-back from remote links. Table 1 displays a port allocation scheme.
 
-There are also changes to Fix Central IP addresses that require changes before the next Remote Code Upgrade is scheduled.
+Table 1. Port allocation scheme  
 
-The new remote support IP addresses are active and ready to use.  For security reasons they do not respond to ping requests.
+| Adapter | Port | 4 ports | 8 ports | 12 ports |16 ports | SAN Fabric |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| Adapter 1 Port 1 | Host and Storage	| Host and Storage | Host and Storage | Host and Storage | A |
+| Adapter 1 Port 2 | Host and Storage	| Host and Storage | Host and Storage | Host and Storage | B |
+| Adapter 1 Port 3 | Intracluster and Replication | Intracluster | Intracluster | Intracluster | A |
+| Adapter 1 Port 4 | Intracluster and Replication | Intracluster | Intracluster | Intracluster | B |
+| Adapter 2 Port 1 | - | Host and Storage | Host and Storage | Host and Storage | A |
+| Adapter 2 Port 2 | - | Host and Storage | Host and Storage | Host and Storage | B |  
+| Adapter 2 Port 3 | -	Intracluster or Replication	Replication or Host and Storage	Replication or Host and Storage	A
+| Adapter 2 Port 4 | -	Intracluster or Replication	Replication or Host and Storage	Replication or Host and Storage	B
+| Adapter 3 Port 1 | -	-	Host and Storage	Host and Storage	A
+| Adapter 3 Port 2 | -	-	Host and Storage	Host and Storage	B
+| Adapter 3 Port 3 | -	-	Intracluster	Intracluster	A
+| Adapter 3 Port 4 | -	-	Intracluster	Intracluster	B
+| Adapter 4 Port 1 | -	-	-	Host and Storage	A
+| Adapter 4 Port 2 | -	-	-	Host and Storage	B
+| Adapter 4 Port 3 | -	-	-	Replication or Host and Storage	A
+| Adapter 4 Port 4 | -	-	-	Replication or Host and Storage	B
+| localfcportmask	1100	11001100 or 00001100	110000001100	0000110000001100	-
+| remotefcportmask	1100	00000000 or 11000000	000011000000	1100000011000000	-
+Host refers to host objects defined in the system.
+Replication refers to nodes that are part of a different cluster.
+Storage refers to controller objects defined in the system if external storage is being used.
+Intracluster refers to nodes within the same cluster.
+The word "and" indicates that both types are used.
+The word "or" indicates that one of the options must be selected. If using replication, preference should be given to replication.
+If a receives more than 16 logins from another node, then it causes node error 860.
 
-**_Spectrum Virtualize Configuration_**
+You can ensure that no more than 16 logins are received by following these guidelines:
+Zone the SAN fabric to reduce the number of paths between the nodes.
+Apply a local Fibre Channel port mask (if the nodes are within the same system) or partner Fibre Channel port mask (if the nodes are in different systems) to reduce the number of ports that are being used for node-to-node communication.
+Provide a combination of the two (zoning and port masks).
+To avoid receiving node error 860 and to maximize performance on your system, follow these guidelines:
+For redundancy, use a minimum of two ports. If ports are being dedicated for different types of traffic, assign a minimum of two ports for each type of traffic.
+Within a system, up to 50% of the overall data that is transferred across the SAN is transmitted between the nodes. However, for read-intensive workloads, the figure is much less. Therefore, if ports are being dedicated for different types of traffic, assign between 1/4 and 1/2 of the overall ports for node-to-node communication within a system.
+For replication between systems, the connection between the systems is usually the bottleneck. Other than for redundancy, there is no point in having more SAN connections than there is bandwidth. For example, if two sites are connected with a 10 Gbps link, two 8 Gbps ports are sufficient. Systems usually are configured with two ports per node for replication traffic primarily for redundancy. For systems with larger numbers of nodes, it might be appropriate to have connections only from a subset of the nodes for replication to a remote system. The system automatically forwards replication traffic between local nodes so that all nodes can still participate in replication.
 
-The Spectrum Virtualize configuration must be updated to add the new IP addresses.
+### Safguarded Copy Implementation
+#### What if the pools fills up?
+There is a system wide setting that is set by using the `chsystem` command that will dictate what happens to safeguarded snapshots and their source volumes when you run out of space in the pool.
+You can check your current setting by using the command 
+```
+lssystem | grep parent
+```
 
-The simplest way to achieve this change is to download and run the software upgrade test utility v36.0 or higher, which updates the configuration automatically. 
+There are two options for snapshot behavior if the pool fills up.  
 
-Alternatively, use the mksystemsupportcenter -proxy no -ip X.X.X.X -port 22  command to add the additional IP addresses manually.
+-	Default behavior is that the prod volume will go offline to protect the snapshots (similar to what happened when child pool filled up with the old safeguarded backups).
+    ```
+    chsystem -snapshotpreserveparent no
+    ```
+-	Optional behavior is to keep the prod volumes online and have the oldest snapshot deleted:
+    ```
+    chsystem -snapshotpreserveparent yes
+    ```
+![Snapshot preserve parent help](assets/images/snapshot-preserve-parent.png)
 
-The list of currently configured remote support servers can be validated by using the lssystemsupportcentercommand.
+### Spectrum Virtualize Remote Support IP Addresses
 
-**Note**:  It is not possible to delete the default system support center servers (id 0 and 1).
-
-**_Remote Support Proxy_**
-
-IBM provides an optional product known as a Remote Support proxy that can be installed in your environment.  This proxy coalesces the remote support traffic for multiple storage devices into a single server and tunnels the traffic through an HTTPS connection.
-
-Any Remote Support Proxy installations must be upgraded to v1.3.2 or higher
-
-**Note:**  The Remote Support proxy was deprecated in Spectrum Virtualize 8.4.2 and higher.  The newer releases of software can use an industry standard HTTP proxy instead of the Remote Support proxy.
 
 **_Firewall Configuration_**
 
@@ -146,112 +212,112 @@ Any firewall holes that were created to allow connections to the current IP addr
 | Existing Remote Support Servers<br><br>*These firewall holes can be removed once new servers are configured and running* | The service IP address of every node or node canister | 129.33.206.139 204.146.30.139 | 22  | ssh | Outbound only |
 | New Remote Support Servers | The service IP address of every node or node canister | 170.225.126.11<br><br>170.225.126.12<br><br>170.225.127.11<br><br>170.225.127.12 | 22  | ssh | Outbound only |
 
-  
- 
-
-> Port 22 is used for direct connections, but any traffic routed through either an HTTP proxy or the dedicated remote support proxy use port 443
-{.is-info}
-
-
-  
-  
- 
-
-**_HTTP Proxy Configuration_**
-
-  
- 
-
-Any HTTP proxies that are used for Remote Support connections might need to update configurations to allow connections to the new IP addresses.
-
-  
-  
- 
-
-**_IP address details_**
-
-  
- 
-
-The current IP addresses used for remote support are:
-
--   129.33.206.139
--   204.146.30.139
-
-  
- 
-
+#### IP address details
 The new IP addresses for remote support are:
 
 -   170.225.126.11 - xrsc-front-srv-1.southdata.ibm.com
 -   170.225.126.12 - xrsc-front-srv-2.southdata.ibm.com
 -   170.225.127.11 - xrsc-front-srv-3.eastdata.ibm.com
 -   170.225.127.12 - xrsc-front-srv-4.eastdata.ibm.com
-
-  
- 
-
-**_Fix Central Code Download - Firewall Configuration_**
-
-  
- 
-
+#### Fix Central Code Download - Firewall Configuration
 IBM Announced in [https://www.ibm.com/support/pages/node/6573219](https://www.ibm.com/support/pages/node/6573219) that there would be a number of changes to some central support infrastructure. 
 
-  
- 
+!!! info
 
-The only impact of this announcement for Spectrum Virtualize customers is related to downloading code directly from Fix Central as part of the Remote Code Load process.
+    - Direct connection to Fix Central on port 22 was deprecated in V8.4.2.  Systems running V8.4.2 or higher download code via esupport.ibm.com on port 443.
+    - The Fix Central DNS names were updated to point to the new IP addresses on 4 June 2022.  Storage Virtualize devices use DNS to connect to Fix Central, therefore all connections will automatically be connecting to the new IP addresses.
 
-  
- 
-
-Systems running V8.4.1 or earlier that have configured their systems to use Remote Code Load might also need to update their firewall rules because the IP addresses of delivery04.dhe.ibm.com are changing. The only change required is to update firewall rules to permit connections to the replacement IP addresses
-
-  
- 
-
-Direct connection to Fix Central on port 22 was deprecated in V8.4.2.  Systems running V8.4.2 or higher download code via esupport.ibm.com on port 443.
-
-  
- 
-
-**The Fix Central DNS names were updated to point to the new IP addresses on 4 June 2022.  Spectrum Virtualize devices use DNS to connect to Fix Central, therefore all connections will automatically be connecting to the new IP addresses.**
-
-  
- 
 
 |     | Source | Target | Port | Protocol | Direction |
 | --- | --- | --- | --- | --- | --- |
-| Existing Fix Central IP addresses<br><br>*These IP addresses are no longer usable, so the firewall holes should be removed.* | The service IP address of every node or node canister | 170.225.15.105<br><br>170.225.15.104<br><br>170.225.15.107<br><br>129.35.224.105<br><br>129.35.224.104<br><br>129.35.224.107 | 22  | sftp | Outbound only |
-| --- | --- | --- | --- | --- | --- |
 | New Fix Central IP addresses | The service IP address of every node or node canister | 170.225.126.44 | 22  | sftp | Outbound only |
-| --- | --- | --- | --- | --- | --- |
 
-  
- 
+**_Additional IBM Support IP address changes that do not affect Storage Virtualize products._**
 
-**_Additional IBM Support IP address changes that do not affect Spectrum Virtualize products._**
-
-The following notification was sent out relating to additional IP address changes.  These changes do not affect Spectrum Virtualize products
+The following notification was sent out relating to additional IP address changes.  These changes do not affect Storage Virtualize products
 
 [https://www.ibm.com/support/pages/node/6587781](https://www.ibm.com/support/pages/node/6587781)
 
   
  
 
-# Procedures
--   [Setup FlashSystem Remote Copy](/storage/ibm/flashsystem/remote-copy)
--   [Export Config XML File](/storage/ibm/flashsystem/config-export)
+## Support Procedures
+
+### Export Config XML File
+1. Log into the GUI
+1. In the left menu, select Settings → Support
+![Support](assets/images/config-xml-1.png)
+1. Select Support Package and click on the Download Support Package option and choose Download Existing Package
+![Support Package](assets/images/config-xml-2.png)
+1. In the filter on the top right, enter `cron.xml` and hit enter.  Select the file, and click Download
+![Filter](assets/images/config-xml-3.png)
+1. The file will be downloaded by your browser (typically to your Download folder).
+
+## Wiping a System to Return/Resell
 
 
-# Scripts
-## Determine Remote Copy Status
-### Objective
+### Erase All Drives
+1. Delete all volumes and pools
+1. Ensure all drives are in _candidate_ use state
+
+        lsdrive
+
+1. Erase all drives using this script
+
+        lsdrive -nohdr | while read -a line ; do chdrive -task erase ${line[0]} ; done
+
+1. Verify erasure completion
+
+        lsdriveprogress
+
+
+
+### Reset System to Factory Defaults
+1. Delete all hosts, volumes, and pools
+1. As superuser, ssh into the service IP node 1 and issue the following:
+
+        sainfo lsservicenodes
+        satask startservice -force <node2_panel_name>
+        satask startservice -force <node1_panel_name>
+
+1. Log back into node 1 service IP and issue the following  (ensure both nodes are in service):
+
+        sainfo lsservicenodes 
+        satask leavecluster -force <node2_panel_name>
+        satask leavecluster -force <node1_panel_name>
+
+!!! note 
+
+    The previous steps will reset the superuser password back to factory defaults.  Use **passw0rd** as the password going forward
+
+
+1. Log back into node 1 service IP and issue the following (ensure ‘cluster_id’, ‘cluster_name’, ‘node_name’ are blank):
+
+        sainfo lsservicenodes 
+        satask chvpd -resetclusterid <node2_panel_name>
+        satask chvpd -resetclusterid <node1_panel_name>
+
+1. Reboot the nodes:
+
+        satask stopnode -reboot <node2_panel_name>
+        satask stopnode -reboot <node1_panel_name>
+
+1. Log back into node 1 service IP and issue the following (both nodes should show 'node_status' as _Candidate_ ):
+
+        sainfo lsservicenodes 
+
+
+## Scripts
+### Determine Remote Copy Status
+#### Objective
 This script will list the progress of all remote copy relationships defined on the system.  It will output the source volume name followed by the “progress” percentage. 
 
+!!! note
 
-### Script Syntax
+    This is based on the OLD remote copy technology.  This should not be used for Policy Based Replication
+
+
+#### Script Syntax
 
 ```typescript
 lsrcrelationship -nohdr | while read -a relationship
@@ -261,7 +327,7 @@ echo
 done
 ```
 
-### Example output:
+#### Example output:
 
 ```plaintext
 Volume Name:  Thor_0
@@ -298,11 +364,11 @@ Volume Name:  Thor_IASP1_4
 progress 100
 ```
 
-## Validate Fibre Channel Host Connectivity Script 
-### Objective
+### Validate Fibre Channel Host Connectivity Script 
+#### Objective
 This script will display all of the SAN fabric connectivity for each defined Host and indicate what port the host is connected through.
 
-### Script Syntax
+#### Script Syntax
 
 ```typescript
 svcinfo lshost -nohdr|while read -a host
@@ -324,7 +390,7 @@ do
 done
 ```
 
-### Example output:
+#### Example output:
 
 ```plaintext
 esx20               
@@ -367,6 +433,4 @@ test
 node node1 -2--
 node node2 -2--
 ```
-# Cool Links
-- [Ansible and IBM Storage](https://www.ansible.com/integrations/infrastructure/ibm-storage)
-{.links-list}
+
