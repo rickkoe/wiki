@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2023-08-11T20:11:26.780Z
+date: 2024-08-08T16:54:44.194Z
 tags: san, brocade, public
 editor: markdown
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -225,6 +225,6 @@ license --reserve -port 0-15
 Use the command in the previous section to display the port licenses after making the static assignment to ensure they were properly assigned.
 
 
-# SAN Discovery
+# SAN Health Reports
 - [Brocade SAN Health](/brocade/brocade-san-health)
 {.links-list}
