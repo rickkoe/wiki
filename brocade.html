@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-10-18T02:39:11.217Z
+date: 2024-10-18T02:40:48.406Z
 tags: san, brocade, public
 editor: ckeditor
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -21,77 +21,63 @@ dateCreated: 2022-02-05T18:22:09.505Z
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable root access </span></label><i><label class="todo-list__label"><span class="todo-list__label__description">optional</span></label></i></li>
 </ul>
-<pre><code class="language-plaintext">userconfig --change root -e yes ; rootaccess --set all
-</code></pre>
+<pre><code class="language-plaintext">userconfig --change root -e yes ; rootaccess --set all</code></pre>
 <p>Set root password to pre-defined password (Login as root/fibranne and it will prompt you to change)</p>
 <p>Set admin password to pre-defined password</p>
-<pre><code class="language-plaintext">passwd
-</code></pre>
+<pre><code class="language-plaintext">passwd</code></pre>
 <h3>Name and Address</h3>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the switch name</span></label></li>
 </ul>
-<pre><code class="language-plaintext">switchname new_name
-</code></pre>
+<pre><code class="language-plaintext">switchname new_name</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set IP address, subnet mask, gateway</span></label></li>
 </ul>
-<pre><code class="language-plaintext">ipaddrset
-</code></pre>
+<pre><code class="language-plaintext">ipaddrset</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the Registered Organization Name <strong>(Directors Only)</strong></span></label></li>
 </ul>
-<pre><code class="language-plaintext">ron --set &lt;customer_name&gt;
-</code></pre>
+<pre><code class="language-plaintext">ron --set &lt;customer_name&gt;</code></pre>
 <h3>Data Center Settings</h3>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Verify Management Port Speed (Default is 1000-auto, but some customers need this set to 100-full)</span></label></li>
 </ul>
-<pre><code class="language-plaintext">
-# If 100-full is required
+<pre><code class="language-plaintext"># If 100-full is required
 ethif --set eth0 -an off -speed 100 -duplex full
 
 # Validate
-ethif --show eth0
-</code></pre>
+ethif --show eth0</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure timezone</span></label></li>
 </ul>
-<pre><code class="language-plaintext">tstimezone America/Chicago
-</code></pre>
+<pre><code class="language-plaintext">tstimezone America/Chicago</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Reboot to make new timezone effective (do this before configurating the clock)</span></label></li>
 </ul>
-<pre><code class="language-plaintext">reboot
-</code></pre>
+<pre><code class="language-plaintext">reboot</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure clock</span></label></li>
 </ul>
-<pre><code class="language-plaintext">date mmddHHMMyy
-</code></pre>
+<pre><code class="language-plaintext">date mmddHHMMyy</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure DNS</span></label></li>
 </ul>
-<pre><code class="language-plaintext">dnsconfig --add -domain &lt;domain_name&gt; -serverip1 &lt;ip_address_1&gt; -serverip2 &lt;ip_address_2&gt;
-</code></pre>
+<pre><code class="language-plaintext">dnsconfig --add -domain &lt;domain_name&gt; -serverip1 &lt;ip_address_1&gt; -serverip2 &lt;ip_address_2&gt;</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure NTP server</span></label></li>
 </ul>
-<pre><code class="language-plaintext">tsclockserver "ntp_server_name"
-</code></pre>
+<pre><code class="language-plaintext">tsclockserver "ntp_server_name"</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure SMTP server</span></label></li>
 </ul>
-<pre><code class="language-plaintext">relayConfig --config -rla_ip &lt;relay IP&gt; -rla_dname &lt;domain name&gt;
-</code></pre>
+<pre><code class="language-plaintext">relayConfig --config -rla_ip &lt;relay IP&gt; -rla_dname &lt;domain name&gt;</code></pre>
 <ul class="todo-list">
-  <li><a href="/san/brocade/ldap-switch"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure LDAP</span></label><span class="todo-list__label__description"> (optional)</span></a></li>
+  <li><a href="/san/brocade/ldap-switch"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure LDAP (optional)</span></label></a></li>
 </ul>
 <h3>Licenses</h3>
 <p><a href="/san/brocade/license">Apply new licenses</a> (POD, etc.)</p>
 <p>Verify licenses (POD, etc.)</p>
-<pre><code class="language-plaintext">licenseshow
-</code></pre>
+<pre><code class="language-plaintext">licenseshow</code></pre>
 <ul class="todo-list">
   <li><a href="/san/brocade/license#static-port-assignment"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Assign static port licenses</span></label></a></li>
 </ul>
@@ -99,19 +85,16 @@ ethif --show eth0
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update FOS</span></label></li>
 </ul>
-<pre><code class="language-plaintext">firmwaredownload &lt;ftp_server_ip&gt;,&lt;ftp_userid&gt;,&lt;path_to_firmware&gt;
-</code></pre>
+<pre><code class="language-plaintext">firmwaredownload &lt;ftp_server_ip&gt;,&lt;ftp_userid&gt;,&lt;path_to_firmware&gt;</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure domain id and set insistent domain ID</span></label></li>
 </ul>
-<pre><code class="language-plaintext">switchdisable ; configure
-</code></pre>
+<pre><code class="language-plaintext">switchdisable ; configure</code></pre>
 <h3>Zone Config</h3>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default zone policy to No Access</span></label></li>
 </ul>
-<pre><code class="language-plaintext">defzone --noaccess ; cfgsave
-</code></pre>
+<pre><code class="language-plaintext">defzone --noaccess ; cfgsave</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure zoning</span></label></li>
 </ul>
@@ -126,15 +109,13 @@ portcfgpersistentdisable 6/0-47
 portcfgpersistentdisable 9/0-47
 portcfgpersistentdisable 10/0-47
 portcfgpersistentdisable 11/0-47
-portcfgpersistentdisable 12/0-47
-</code></pre>
+portcfgpersistentdisable 12/0-47</code></pre>
 <h3>MAPS</h3>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable a policy</span></label></li>
 </ul>
 <pre><code class="language-plaintext">mapspolicy --show -summary
-mapspolicy --enable dflt_conservative_policy
-</code></pre>
+mapspolicy --enable dflt_conservative_policy</code></pre>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Verify policy is active</span></label></li>
 </ul>
@@ -142,8 +123,7 @@ mapspolicy --enable dflt_conservative_policy
 mapsconfig --actions raslog,email
 mapsConfig --emailcfg -address rick.k@evolvingsol.com
 mapsconfig --show
-mapsconfig --testmail -subject "this is a test" -message "test email body"
-</code></pre>
+mapsconfig --testmail -subject "this is a test" -message "test email body"</code></pre>
 <h1>Procedures</h1>
 <h2>Firmware Upgrades</h2>
 <h3>Firmware Upgrade Using CLI</h3>
@@ -155,6 +135,7 @@ mapsconfig --testmail -subject "this is a test" -message "test email body"
   <li>Copy the TrueFOS License to the FTP server and install with a command like this</li>
 </ol>
 <pre><code class="language-plaintext">license --install -h 10.10.10.10 -t scp -u admin -f /home/admin/licenses/1729215840332_LID_10_00_D8_33_24_18_92.xml</code></pre>
+<p>&nbsp;</p>
 <ol>
   <li>&nbsp;</li>
 </ol>
@@ -211,6 +192,7 @@ mapsconfig --testmail -subject "this is a test" -message "test email body"
   <li>Activate the license using the license --install -key &lt;lic_key&gt; command.</li>
 </ol>
 <pre><code class="language-plaintext">license --install -key HP9ttZNSgmB4MCD3NmNWgQDWtAKBFtXtBSFJF</code></pre>
+<p>&nbsp;</p>
 <ol>
   <li>Verify that the license was installed by entering the license --show command. The licensed features that are currently installed on the switch are listed. If the feature is not listed, use the license --install command to install the license.</li>
 </ol>
@@ -221,12 +203,10 @@ mapsconfig --testmail -subject "this is a test" -message "test email body"
   <li>Connect to the switch, and log in using an account with admin permissions.</li>
   <li>Enter the license --show -port command to view how port licenses are currently assigned.</li>
 </ol>
-<pre><code class="language-plaintext">license --show -port
-</code></pre>
+<pre><code class="language-plaintext">license --show -port</code></pre>
 <h2>Static Port Assignment</h2>
 <p>When Dynamic Ports On Demand (DPOD) is enabled, ports are licensed from a pool of available licenses based on the server blade or switch installation. Each port that is enabled will secure a license on a first-come, first-served basis. If you would like to statically assign port licenses, use the following command. Example below would reserve licenses on the first 16 ports in a switch.</p>
-<pre><code class="language-plaintext">license --reserve -port 0-15
-</code></pre>
+<pre><code class="language-plaintext">license --reserve -port 0-15</code></pre>
 <p>Use the command in the previous section to display the port licenses after making the static assignment to ensure they were properly assigned.</p>
 <h1>SAN Health Reports</h1>
 <ul>
