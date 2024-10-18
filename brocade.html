@@ -1,0 +1,239 @@
+<!--
+title: Brocade SAN
+description: 
+published: true
+date: 2024-10-18T02:30:27.751Z
+tags: san, brocade, public
+editor: ckeditor
+dateCreated: 2022-02-05T18:22:09.505Z
+-->
+
+<h1 class="toc-header" id="documentation-links"> Documentation Links</h1>
+<ul class="links-list">
+<li><a rel="noreferrer" target="_blank" class="is-external-link" href="https://support.broadcom.com">Broadcom Support Portal <em>Click on <strong>Brocade Storage Networking</strong> in Header</em></a></li>
+<li><a rel="noreferrer" target="_blank" class="is-external-link" href="https://docs.broadcom.com/doc/FOS-90x-Admin-AG">Brocade FOS Administration Guide, 9.0.x</a></li>
+<li><a rel="noreferrer" target="_blank" class="is-external-link" href="https://docs.broadcom.com/doc/FOS-90x-Command-RM">Brocade FOS Command Reference Manual, 9.0.x</a></li>
+</ul>
+<h1 class="toc-header"> Implementation</h1>
+<h2 class="toc-header" id="implementation-checklist"> Implementation Checklist</h2>
+<p>These are the typical items that should be reviewed and/or configured when setting up a new Brocade SAN switch/director. While many of these settings can be set in WebTools, the CLI commands are listed here for a simlper checklist.</p>
+<h3 class="toc-header" id="user-settings"> User Settings</h3>
+<ul>
+<li><input type="checkbox"> Enable root access <em>optional</em></li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">userconfig --change root -e yes ; rootaccess --set all
+</code></pre>
+<ul>
+<li>
+<p><input type="checkbox"> Set root password to pre-defined password (Login as root/fibranne and it will prompt you to change)</p>
+</li>
+<li>
+<p><input type="checkbox"> Set admin password to pre-defined password</p>
+</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">passwd
+</code></pre>
+<h3 class="toc-header" id="name-and-address"> Name and Address</h3>
+<ul>
+<li><input type="checkbox"> Set the switch name</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">switchname new_name
+</code></pre>
+<ul>
+<li><input type="checkbox"> Set IP address, subnet mask, gateway</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">ipaddrset
+</code></pre>
+<ul>
+<li><input type="checkbox"> Set the Registered Organization Name <strong>(Directors Only)</strong></li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">ron --set &lt;customer_name&gt;
+</code></pre>
+<h3 class="toc-header" id="data-center-settings"> Data Center Settings</h3>
+<ul>
+<li><input type="checkbox"> Verify Management Port Speed (Default is 1000-auto, but some customers need this set to 100-full)</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">
+# If 100-full is required
+ethif --set eth0 -an off -speed 100 -duplex full
+
+# Validate
+ethif --show eth0
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure timezone</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">tstimezone America/Chicago
+</code></pre>
+<ul>
+<li><input type="checkbox"> Reboot to make new timezone effective (do this before configurating the clock)</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">reboot
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure clock</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">date mmddHHMMyy
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure DNS</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">dnsconfig --add -domain &lt;domain_name&gt; -serverip1 &lt;ip_address_1&gt; -serverip2 &lt;ip_address_2&gt;
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure NTP server</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">tsclockserver "ntp_server_name"
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure SMTP server</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">relayConfig --config -rla_ip &lt;relay IP&gt; -rla_dname &lt;domain name&gt;
+</code></pre>
+<ul>
+<li><input type="checkbox"> <a class="is-internal-link is-invalid-page" href="/san/brocade/ldap-switch">Configure LDAP</a> (optional)</li>
+</ul>
+<h3 class="toc-header" id="licenses"> Licenses</h3>
+<ul>
+<li>
+<p><input type="checkbox"> <a class="is-internal-link is-invalid-page" href="/san/brocade/license">Apply new licenses</a> (POD, etc.)</p>
+</li>
+<li>
+<p><input type="checkbox"> Verify licenses (POD, etc.)</p>
+</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">licenseshow
+</code></pre>
+<ul>
+<li><input type="checkbox"> <a class="is-internal-link is-invalid-page" href="/san/brocade/license#static-port-assignment">Assign static port licenses</a></li>
+</ul>
+<h3 class="toc-header" id="firmware"> Firmware</h3>
+<ul>
+<li><input type="checkbox"> Update FOS</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">firmwaredownload &lt;ftp_server_ip&gt;,&lt;ftp_userid&gt;,&lt;path_to_firmware&gt;
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure domain id and set insistent domain ID</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">switchdisable ; configure
+</code></pre>
+<h3 class="toc-header" id="zone-config"> Zone Config</h3>
+<ul>
+<li><input type="checkbox"> Configure default zone policy to No Access</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">defzone --noaccess ; cfgsave
+</code></pre>
+<ul>
+<li><input type="checkbox"> Configure zoning</li>
+</ul>
+<h3 class="toc-header" id="optional"> Optional</h3>
+<ul>
+<li><input type="checkbox"> Persistent disable all ports</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">portcfgpersistentdisable 3/0-47
+portcfgpersistentdisable 4/0-47
+portcfgpersistentdisable 5/0-47
+portcfgpersistentdisable 6/0-47
+portcfgpersistentdisable 9/0-47
+portcfgpersistentdisable 10/0-47
+portcfgpersistentdisable 11/0-47
+portcfgpersistentdisable 12/0-47
+</code></pre>
+<h3 class="toc-header" id="maps"> MAPS</h3>
+<ul>
+<li><input type="checkbox"> Enable a policy</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">mapspolicy --show -summary
+mapspolicy --enable dflt_conservative_policy
+</code></pre>
+<ul>
+<li><input type="checkbox"> Verify policy is active</li>
+</ul>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">mapsconfig --show
+mapsconfig --actions raslog,email
+mapsConfig --emailcfg -address rick.k@evolvingsol.com
+mapsconfig --show
+mapsconfig --testmail -subject "this is a test" -message "test email body"
+</code></pre>
+<h1 class="toc-header" id="procedures"> Procedures</h1>
+<h2 class="toc-header" id="firmware-upgrades"> Firmware Upgrades</h2>
+<h3 class="toc-header" id="firmware-upgrade-using-cli"> Firmware Upgrade Using CLI</h3>
+<ol>
+<li>Have a SCP/SFTP server available</li>
+<li>Download the code from the appropriate support vendor (Brocade, IBM, etc.)</li>
+<li>Extract the .zip file and place in FTP server directory</li>
+<li>Download the TrueFOS License from the appropriate support vendor</li>
+</ol>
+<ul>
+<li>For IBM:<br>
+go to <a rel="noreferrer" target="_blank" class="is-external-link" href="https://ibm.com/support">https://ibm.com/support</a> and choose FixCentral and enter the appropriate IBM switch type (SAN24B-6, etc)</li>
+</ul>
+<h1 class="toc-header" id="brocade-san-switch-licenses"> Brocade SAN Switch Licenses</h1>
+<p>In order to activate a license, you must have a <strong>Transaction Key</strong> for each license to be activated along with the <strong>License ID</strong> (LID) of the appropriate switch.</p>
+<h2 class="toc-header" id="obtaining-the-transaction-key"> Obtaining the Transaction Key</h2>
+<p>A Transaction key is unique key, along with the LID, used to generate a software license from the Broadcom licensing portal. The transaction key is issued when a license is purchased. The transaction key is delivered in one of two methods:</p>
+<ul>
+<li><strong>Paperpack</strong> – The transaction key is printed and delivered within a POD Optic Hardware Kit.</li>
+<li><strong>E-license</strong> – The transaction key is contained in an email that is sent instantly to the customer after the sales order is created. The customer is sent the email message within a few minutes after the sales order is submitted, although the timing will vary depending on the network, internet connection, and so on.</li>
+</ul>
+<h2 class="toc-header" id="obtaining-the-license-id"> Obtaining the License ID</h2>
+<p>You must have a license ID to generate the license file in the Broadcom licensing portal.<br>
+Obtain the license ID of the switch or chassis using the CLI method:</p>
+<ol>
+<li>Connect to the switch, and log in using an account with admin permissions.</li>
+<li>Enter the following command to display the license ID of the switch:</li>
+</ol>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">license --show -lid
+</code></pre>
+<h2 class="toc-header" id="generating-a-license-key"> Generating a License Key</h2>
+<p>Use the following procedure to generate and obtain a FOS license key.</p>
+<ol>
+<li>Go to <a rel="noreferrer" target="_blank" class="is-external-link" href="https://www.broadcom.com">https://www.broadcom.com</a>, and then select the LOGIN drop-down at the top-right of the web page.</li>
+<li>Click <strong>LOGIN</strong> or <strong>REGISTER</strong>. Once logged in, you will be redirected to the Broadcom support portal.</li>
+<li>Click <strong>Brocade Products</strong>. You will be redirected to the Brocade Products page.</li>
+<li>Click <strong>Licensing</strong>. You will be redirected to the Broadcom Licensing Portal page.</li>
+<li>Enter the transaction key. Click Next to continue.</li>
+</ol>
+<blockquote class="is-info">
+<p>Re-host keys are generated only by the SANnav application and are used only on SANnav.</p>
+</blockquote>
+<ol start="6">
+<li>Enter the license ID (LID) that you obtained earlier in the Unit Information field. Click <strong>Next</strong> to continue.</li>
+<li>Read the Broadcom End User License Agreement, and if you agree to the terms, select the <strong>I have read and accept</strong> checkbox.</li>
+<li>Click <strong>Generate</strong> to generate the license.</li>
+<li>The license key will be sent by email and can also be downloaded by selecting the blue license hyperlink from the Broadcom licensing portal UI.</li>
+<li>If a license string is generated, save it to your local folder for future reference.</li>
+<li>If an XML certificate file is generated, save it to the remote server, where it will be retrieved for installing the license.</li>
+</ol>
+<h2 class="toc-header" id="installing-the-license-using-a-license-string"> Installing the License Using a License String</h2>
+<p>For Brocade Gen 6 switches and directors, you must pass the license key in the license --install command to install the licenses.</p>
+<ol>
+<li>Connect to the switch, and log in using an account with admin permissions.</li>
+<li>Activate the license using the license --install -key &lt;lic_key&gt; command.</li>
+</ol>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">license --install -key HP9ttZNSgmB4MCD3NmNWgQDWtAKBFtXtBSFJF
+</code></pre>
+<ol start="3">
+<li>Verify that the license was installed by entering the license --show command. The licensed features that are currently installed on the switch are listed. If the feature is not listed, use the license --install command to install the license.</li>
+</ol>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">license --show
+</code></pre>
+<h2 class="toc-header" id="displaying-port-license-assignments"> Displaying Port License Assignments</h2>
+<p>When you display the available licenses, you can also view the current port assignment of those licenses.<br>
+Use the following procedure to display the port license assignments.</p>
+<ol>
+<li>Connect to the switch, and log in using an account with admin permissions.</li>
+<li>Enter the license --show -port command to view how port licenses are currently assigned.</li>
+</ol>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">license --show -port
+</code></pre>
+<h2 class="toc-header" id="static-port-assignment"> Static Port Assignment</h2>
+<p>When Dynamic Ports On Demand (DPOD) is enabled, ports are licensed from a pool of available licenses based on the server blade or switch installation.  Each port that is enabled will secure a license on a first-come, first-served basis.  If you would like to statically assign port licenses, use the following command.  Example below would reserve licenses on the first 16 ports in a switch.</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-">license --reserve -port 0-15
+</code></pre>
+<p>Use the command in the previous section to display the port licenses after making the static assignment to ensure they were properly assigned.</p>
+<h1 class="toc-header" id="san-health-reports"> SAN Health Reports</h1>
+<ul class="links-list">
+<li><a class="is-internal-link is-valid-page" href="/brocade/brocade-san-health">Brocade SAN Health</a></li>
+</ul>
