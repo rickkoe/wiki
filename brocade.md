@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-08-08T16:54:44.194Z
+date: 2024-10-18T02:30:07.668Z
 tags: san, brocade, public
 editor: markdown
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -166,6 +166,16 @@ mapsConfig --emailcfg -address rick.k@evolvingsol.com
 mapsconfig --show
 mapsconfig --testmail -subject "this is a test" -message "test email body"
 ```
+# Procedures
+## Firmware Upgrades
+### Firmware Upgrade Using CLI
+1. Have a SCP/SFTP server available
+1. Download the code from the appropriate support vendor (Brocade, IBM, etc.)
+1. Extract the .zip file and place in FTP server directory
+1. Download the TrueFOS License from the appropriate support vendor
+- For IBM:
+go to [https://ibm.com/support](https://ibm.com/support) and choose FixCentral and enter the appropriate IBM switch type (SAN24B-6, etc)
+
 # Brocade SAN Switch Licenses
 In order to activate a license, you must have a **Transaction Key** for each license to be activated along with the **License ID** (LID) of the appropriate switch.
 ## Obtaining the Transaction Key
