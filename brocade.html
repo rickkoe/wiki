@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-10-18T02:52:45.367Z
+date: 2024-10-18T02:55:30.239Z
 tags: san, brocade, public
 editor: ckeditor
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -19,7 +19,7 @@ dateCreated: 2022-02-05T18:22:09.505Z
 <p>These are the typical items that should be reviewed and/or configured when setting up a new Brocade SAN switch/director. While many of these settings can be set in WebTools, the CLI commands are listed here for a simlper checklist.</p>
 <h3>User Settings</h3>
 <ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable root access </span></label><i><label class="todo-list__label"><span class="todo-list__label__description">optional</span></label></i></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">&nbsp;Enable root access </span></label><i><label class="todo-list__label"><span class="todo-list__label__description">optional</span></label></i></li>
 </ul>
 <pre><code class="language-plaintext">userconfig --change root -e yes ; rootaccess --set all</code></pre>
 <p>Set root password to pre-defined password (Login as root/fibranne and it will prompt you to change)</p>
@@ -30,10 +30,12 @@ dateCreated: 2022-02-05T18:22:09.505Z
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the switch name</span></label></li>
 </ul>
 <pre><code class="language-plaintext">switchname new_name</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set IP address, subnet mask, gateway</span></label></li>
 </ul>
 <pre><code class="language-plaintext">ipaddrset</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the Registered Organization Name <strong>(Directors Only)</strong></span></label></li>
 </ul>
@@ -47,30 +49,37 @@ ethif --set eth0 -an off -speed 100 -duplex full
 
 # Validate
 ethif --show eth0</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure timezone</span></label></li>
 </ul>
 <pre><code class="language-plaintext">tstimezone America/Chicago</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Reboot to make new timezone effective (do this before configurating the clock)</span></label></li>
 </ul>
 <pre><code class="language-plaintext">reboot</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure clock</span></label></li>
 </ul>
 <pre><code class="language-plaintext">date mmddHHMMyy</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure DNS</span></label></li>
 </ul>
 <pre><code class="language-plaintext">dnsconfig --add -domain &lt;domain_name&gt; -serverip1 &lt;ip_address_1&gt; -serverip2 &lt;ip_address_2&gt;</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure NTP server</span></label></li>
 </ul>
 <pre><code class="language-plaintext">tsclockserver "ntp_server_name"</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure SMTP server</span></label></li>
 </ul>
 <pre><code class="language-plaintext">relayConfig --config -rla_ip &lt;relay IP&gt; -rla_dname &lt;domain name&gt;</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><a href="/san/brocade/ldap-switch"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure LDAP (optional)</span></label></a></li>
 </ul>
@@ -78,6 +87,7 @@ ethif --show eth0</code></pre>
 <p><a href="/san/brocade/license">Apply new licenses</a> (POD, etc.)</p>
 <p>Verify licenses (POD, etc.)</p>
 <pre><code class="language-plaintext">licenseshow</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><a href="/san/brocade/license#static-port-assignment"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Assign static port licenses</span></label></a></li>
 </ul>
@@ -86,6 +96,7 @@ ethif --show eth0</code></pre>
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update FOS</span></label></li>
 </ul>
 <pre><code class="language-plaintext">firmwaredownload &lt;ftp_server_ip&gt;,&lt;ftp_userid&gt;,&lt;path_to_firmware&gt;</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure domain id and set insistent domain ID</span></label></li>
 </ul>
@@ -95,6 +106,7 @@ ethif --show eth0</code></pre>
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default zone policy to No Access</span></label></li>
 </ul>
 <pre><code class="language-plaintext">defzone --noaccess ; cfgsave</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure zoning</span></label></li>
 </ul>
@@ -116,6 +128,7 @@ portcfgpersistentdisable 12/0-47</code></pre>
 </ul>
 <pre><code class="language-plaintext">mapspolicy --show -summary
 mapspolicy --enable dflt_conservative_policy</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Verify policy is active</span></label></li>
 </ul>
@@ -133,7 +146,7 @@ mapsconfig --testmail -subject "this is a test" -message "test email body"</code
   <li>Extract the .zip file and place in FTP server directory</li>
   <li>Download the TrueFOS License from the appropriate support vendor</li>
   <li>Copy the TrueFOS License to the FTP server and install with a command like this<br><code>license --install -h 10.10.10.10 -t scp -u admin -f /home/admin/licenses/1729215840332_LID_10_00_D8_33_24_18_92.xml</code></li>
-  <li>&nbsp;Once the license is installed, start the code upgrade with the following command:<br><code>firmwaredownload</code></li>
+  <li>Once the license is installed, start the code upgrade with the following command:<br><code>firmwaredownload</code></li>
   <li>Follow the promps on firmwaredownload to enter:<ol>
       <li>Server Name or IP Address</li>
       <li>User Name</li>
