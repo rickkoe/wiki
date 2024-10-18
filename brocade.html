@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-10-18T02:55:30.239Z
+date: 2024-10-18T02:58:58.975Z
 tags: san, brocade, public
 editor: ckeditor
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -18,68 +18,56 @@ dateCreated: 2022-02-05T18:22:09.505Z
 <h2>Implementation Checklist</h2>
 <p>These are the typical items that should be reviewed and/or configured when setting up a new Brocade SAN switch/director. While many of these settings can be set in WebTools, the CLI commands are listed here for a simlper checklist.</p>
 <h3>User Settings</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">&nbsp;Enable root access </span></label><i><label class="todo-list__label"><span class="todo-list__label__description">optional</span></label></i></li>
+<ul>
+  <li>Set admin password to pre-defined password</li>
 </ul>
-<pre><code class="language-plaintext">userconfig --change root -e yes ; rootaccess --set all</code></pre>
-<p>Set root password to pre-defined password (Login as root/fibranne and it will prompt you to change)</p>
-<p>Set admin password to pre-defined password</p>
 <pre><code class="language-plaintext">passwd</code></pre>
 <h3>Name and Address</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the switch name</span></label></li>
+<ul>
+  <li>Set the switch name</li>
 </ul>
 <pre><code class="language-plaintext">switchname new_name</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set IP address, subnet mask, gateway</span></label></li>
+<ul>
+  <li>Set IP address, subnet mask, gateway</li>
 </ul>
 <pre><code class="language-plaintext">ipaddrset</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the Registered Organization Name <strong>(Directors Only)</strong></span></label></li>
+<ul>
+  <li>Set the Registered Organization Name <strong>(Directors Only)</strong></li>
 </ul>
 <pre><code class="language-plaintext">ron --set &lt;customer_name&gt;</code></pre>
 <h3>Data Center Settings</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Verify Management Port Speed (Default is 1000-auto, but some customers need this set to 100-full)</span></label></li>
+<ul>
+  <li>Verify Management Port Speed (Default is 1000-auto, but some customers need this set to 100-full)</li>
 </ul>
 <pre><code class="language-plaintext"># If 100-full is required
 ethif --set eth0 -an off -speed 100 -duplex full
 
 # Validate
 ethif --show eth0</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure timezone</span></label></li>
+<ul>
+  <li>Configure timezone</li>
 </ul>
 <pre><code class="language-plaintext">tstimezone America/Chicago</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Reboot to make new timezone effective (do this before configurating the clock)</span></label></li>
+<ul>
+  <li>Reboot to make new timezone effective (do this before configurating the clock)</li>
 </ul>
 <pre><code class="language-plaintext">reboot</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure clock</span></label></li>
+<ul>
+  <li>Configure clock</li>
 </ul>
 <pre><code class="language-plaintext">date mmddHHMMyy</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure DNS</span></label></li>
+<ul>
+  <li>Configure DNS</li>
 </ul>
 <pre><code class="language-plaintext">dnsconfig --add -domain &lt;domain_name&gt; -serverip1 &lt;ip_address_1&gt; -serverip2 &lt;ip_address_2&gt;</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure NTP server</span></label></li>
+<ul>
+  <li>Configure NTP server</li>
 </ul>
 <pre><code class="language-plaintext">tsclockserver "ntp_server_name"</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure SMTP server</span></label></li>
+<ul>
+  <li>Configure SMTP server</li>
 </ul>
 <pre><code class="language-plaintext">relayConfig --config -rla_ip &lt;relay IP&gt; -rla_dname &lt;domain name&gt;</code></pre>
-<p>&nbsp;</p>
 <ul class="todo-list">
   <li><a href="/san/brocade/ldap-switch"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure LDAP (optional)</span></label></a></li>
 </ul>
@@ -87,17 +75,12 @@ ethif --show eth0</code></pre>
 <p><a href="/san/brocade/license">Apply new licenses</a> (POD, etc.)</p>
 <p>Verify licenses (POD, etc.)</p>
 <pre><code class="language-plaintext">licenseshow</code></pre>
-<p>&nbsp;</p>
 <ul class="todo-list">
   <li><a href="/san/brocade/license#static-port-assignment"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Assign static port licenses</span></label></a></li>
 </ul>
 <h3>Firmware</h3>
 <ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update FOS</span></label></li>
-</ul>
-<pre><code class="language-plaintext">firmwaredownload &lt;ftp_server_ip&gt;,&lt;ftp_userid&gt;,&lt;path_to_firmware&gt;</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update FOS&nbsp;</span></label></li>
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure domain id and set insistent domain ID</span></label></li>
 </ul>
 <pre><code class="language-plaintext">switchdisable ; configure</code></pre>
