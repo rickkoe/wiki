@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-10-18T02:40:48.406Z
+date: 2024-10-18T02:52:45.367Z
 tags: san, brocade, public
 editor: ckeditor
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -132,13 +132,22 @@ mapsconfig --testmail -subject "this is a test" -message "test email body"</code
   <li>Download the code from the appropriate support vendor (Brocade, IBM, etc.)</li>
   <li>Extract the .zip file and place in FTP server directory</li>
   <li>Download the TrueFOS License from the appropriate support vendor</li>
-  <li>Copy the TrueFOS License to the FTP server and install with a command like this</li>
+  <li>Copy the TrueFOS License to the FTP server and install with a command like this<br><code>license --install -h 10.10.10.10 -t scp -u admin -f /home/admin/licenses/1729215840332_LID_10_00_D8_33_24_18_92.xml</code></li>
+  <li>&nbsp;Once the license is installed, start the code upgrade with the following command:<br><code>firmwaredownload</code></li>
+  <li>Follow the promps on firmwaredownload to enter:<ol>
+      <li>Server Name or IP Address</li>
+      <li>User Name</li>
+      <li>File Name</li>
+      <li>Network Protocol(1-SCP, 2-SFTP)</li>
+      <li>Do you want to input SCP/SFTP options (Y/N) = N</li>
+      <li>Password</li>
+      <li>Do you want to continue with CRA (Y/N) = N</li>
+    </ol>
+  </li>
+  <li>The switch will do a warm/nondisruptive upgrade and will disconnect SSH, but I/O will not be disrupted.</li>
+  <li>Use the following commands to verify firmware status<br><code>firmwareshow</code><br><code>firmwaredownloadstatus</code></li>
 </ol>
-<pre><code class="language-plaintext">license --install -h 10.10.10.10 -t scp -u admin -f /home/admin/licenses/1729215840332_LID_10_00_D8_33_24_18_92.xml</code></pre>
-<p>&nbsp;</p>
-<ol>
-  <li>&nbsp;</li>
-</ol>
+<h2>Download TrueFOS Certificate</h2>
 <ul>
   <li>For IBM:<ul>
       <li>Go to <a href="https://ibm.com/support">https://ibm.com/support</a> and choose FixCentral and enter the appropriate IBM switch type (SAN24B-6, etc)</li>
@@ -163,8 +172,7 @@ mapsconfig --testmail -subject "this is a test" -message "test email body"</code
   <li>Connect to the switch, and log in using an account with admin permissions.</li>
   <li>Enter the following command to display the license ID of the switch:</li>
 </ol>
-<pre><code class="language-plaintext">license --show -lid
-</code></pre>
+<pre><code class="language-plaintext">license --show -lid</code></pre>
 <h2>Generating a License Key</h2>
 <p>Use the following procedure to generate and obtain a FOS license key.</p>
 <ol>
