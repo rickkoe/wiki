@@ -2,7 +2,7 @@
 title: IBM FlashSystem Storage
 description: 
 published: true
-date: 2024-10-23T17:41:26.833Z
+date: 2024-10-23T17:47:27.734Z
 tags: ibm, storage, flashsystem
 editor: ckeditor
 dateCreated: 2023-01-22T14:49:57.535Z
@@ -74,15 +74,17 @@ dateCreated: 2023-01-22T14:49:57.535Z
   <li>Via CLI, issue this command to snapshot</li>
 </ul>
 <pre><code class="language-plaintext">addsnapshot -volumes snap_test_00</code></pre>
+<p>&nbsp;</p>
 <ul>
   <li>List the snapshots to verify and make note of the snapshot ID</li>
 </ul>
 <pre><code class="language-plaintext">lsvolumegroupsnapshot | grep -i snap_test_00</code></pre>
+<p>&nbsp;</p>
 <ul>
   <li>Restore the snapshot over the original volume</li>
 </ul>
 <pre><code class="language-plaintext">restorefromsnapshot -snapshotid 135 -volumes snap_test_00</code></pre>
-<h2>Implementation</h2>
+<h1>Implementation</h1>
 <h3>Implementation Checklist</h3>
 <blockquote>
   <p>This is not an official instruction manual from IBM. Alway refer to the latest IBM docs if you are unsure about how to complete a step in the list below.</p>
@@ -115,7 +117,7 @@ dateCreated: 2023-01-22T14:49:57.535Z
       <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=problem-procedure-changing-service-ip-address-node-canister"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the Service IPs</span></label></a></li>
       <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Ethernet IPs for ISCSI or IP replication</span></label></li>
       <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=overview-portsets"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Ethernet Portsets</span></label></a></li>
-      <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=volumes-volume-protection"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Volume Protection</span></label><span class="todo-list__label__description"> (recommend leaving on)</span></a></li>
+      <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=volumes-volume-protection"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Volume Protection (recommend leaving on)</span></label></a></li>
       <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Call Home / Email Notifications</span></label></li>
       <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">SNMP</span></label></li>
       <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Syslog</span></label></li>
