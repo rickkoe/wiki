@@ -2,7 +2,7 @@
 title: Export Config XML File
 description: 
 published: true
-date: 2023-07-11T22:25:20.125Z
+date: 2024-10-25T22:34:56.203Z
 tags: flashsystem, config, export, xml, public
 editor: markdown
 dateCreated: 2022-02-05T15:33:37.531Z
