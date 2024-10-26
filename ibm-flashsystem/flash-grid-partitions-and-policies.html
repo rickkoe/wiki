@@ -1,0 +1,94 @@
+<!--
+title: Flash Grid, Partitions, and Policy-Based Features
+description: 
+published: true
+date: 2024-10-26T03:02:13.866Z
+tags: flash grid, pbr, pbha, ha
+editor: ckeditor
+dateCreated: 2024-10-26T03:02:13.866Z
+-->
+
+<h1>Flash Grid</h1>
+<p>Flash Grids break the traditional requirements for HA where nodes needed to be clustered and was limited to a “per I/O group” setup. With Flash Grid technology systems no longer need to be paired and breaks the limitation thus allowing them to be scaled out. The following are steps to setup the Flash Grid. Flash Grids must be defined before features such PBHA, PB Replication, and systems resources can be moved onto another system.</p>
+<p>&nbsp;</p>
+<ol>
+  <li>Create partnership between 2 or more systems that will be a part of the Flash Grid. Can use either GUI or CLI.<ul>
+      <li><code>mkfcpartnership</code> or <code>mkippartnership</code> – defines partnerships with FC/FCoE or IP links</li>
+      <li><code>lspartnershipcandidate</code> – will list any systems that can be used as a partner</li>
+      <li><code>lspartnership</code> – list current partners defined to the system</li>
+    </ul>
+  </li>
+  <li>Ensure ‘multiple I/O group feature’ is not enabled.<ol>
+      <li>• GUI – found in GUI Features under Settings</li>
+      <li>• CLI – <code>chcompatibilitymode -disable -feature multiple_io_groups</code></li>
+    </ol>
+  </li>
+  <li>Ensure SI control access is ‘on’<ol>
+      <li>• GUI – N/A</li>
+      <li>• CLI – <code>chsystem -storageinsightscontrolaccess -yes</code></li>
+    </ol>
+  </li>
+  <li>Ensure a ‘truststore’ has been created for system to be partnered with AND restapi is ‘on’.</li>
+</ol>
+<p>• GUI – N/A</p>
+<p>• CLI –</p>
+<p>o ‘lstruststore’ – lists defined truststore. If partnership was created, then should see an entry TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.</p>
+<p>&nbsp;</p>
+<p>o ‘chtruststore -restapi on x’</p>
+<p>- where x = id of truststore</p>
+<p>&nbsp;</p>
+<p>o ‘mktrustore -file xy -name abc -restapi on’</p>
+<p>- where xy = location of certificate file</p>
+<p>- where abc = name for truststore that will be created</p>
+<p>&nbsp;</p>
+<p>5. Create Flash Grid.</p>
+<p>• GUI – N/A</p>
+<p>• CLI – ‘manageflashgrid -create -name flash_grid_name’</p>
+<p>&nbsp;</p>
+<p>6. Join system to Flash Grid</p>
+<p>• GUI – N/A</p>
+<p>• CLI – ‘manageflashgrid -join -ip target_ip_address -truststore id/name’</p>
+<p>o target_ip_address = IP of the system to join</p>
+<p>&nbsp;</p>
+<p>7. Accept system to the Flash Grid</p>
+<p>• GUI – N/A</p>
+<p>• CLI – ‘manageflashgrid -accept -ip remote_ip_address -truststore id/name’</p>
+<p>o remote_ip_address = ip of system requesting</p>
+<p>&nbsp;</p>
+<p>8. Flash Grid verification</p>
+<p>• GUI – N/A</p>
+<p>• CLI – ‘lssystem |grep flash_grid’</p>
+<p>o Should see flash_grid_name match name given in step 5 above.</p>
+<p>&nbsp;</p>
+<p>9. Verify the newly created Flash Grid has been picked up in Storage Insights.</p>
+<p>At this time it will take at least 5mins or more. Sometime almost 12hours.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Partition Migration</p>
+<p>To use this feature for migration the current Flash System should be in the same Flash Grid.</p>
+<p>Any async replications must be removed before you can move the partition to another Flash System.</p>
+<p>The target Flash System should have connectivity to the Host/s that are currently utilizing the Flash System that will be migrated.</p>
+<p>Steps:</p>
+<p>1. Run cli command ‘lspartnership’. Ensure target system is listed in output.</p>
+<p>This will also provide the id name for the target system which can be useful when verifying if a truststore was automatically created when setting up the grid.</p>
+<p>2. Run cli command ‘lsstruststore’ be sure one exists between the target and source. One should exist between the two Flash Systems. Clients may create their own before joining systems to the grid.</p>
+<p>Default names start with TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.</p>
+<p>&nbsp;</p>
+<p>After verification of steps 1 and 2 proceed to move the partition to the desired location.</p>
+<p>&nbsp;</p>
+<p>3. Run cli command “chpartition location_sys_name partition_name” &nbsp;</p>
+<p>&nbsp;</p>
+<p>Example. chpartition FS5200_DR “FS9200 Demo”</p>
+<p>&nbsp;</p>
+<p>Note:</p>
+<p>• If names have space put them in quotes.</p>
+<p>• Run “catauditlog -showhidden” command to see progress.</p>
+<p>• Issue “lspartition” to see status of move should see status “establishing synchronizing” in output.</p>
+<p>&nbsp;</p>
+<p>4. Will see following description in event listing when move was successful. Also list partition and system should no longer show the partition that was migrated.</p>
+<p>“Storage partition migration completed successfully”</p>
+<p>&nbsp;</p>
