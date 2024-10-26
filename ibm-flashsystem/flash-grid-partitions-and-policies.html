@@ -2,7 +2,7 @@
 title: Flash Grid, Partitions, and Policy-Based Features
 description: 
 published: true
-date: 2024-10-26T03:02:13.866Z
+date: 2024-10-26T03:09:23.223Z
 tags: flash grid, pbr, pbha, ha
 editor: ckeditor
 dateCreated: 2024-10-26T03:02:13.866Z
@@ -10,7 +10,6 @@ dateCreated: 2024-10-26T03:02:13.866Z
 
 <h1>Flash Grid</h1>
 <p>Flash Grids break the traditional requirements for HA where nodes needed to be clustered and was limited to a “per I/O group” setup. With Flash Grid technology systems no longer need to be paired and breaks the limitation thus allowing them to be scaled out. The following are steps to setup the Flash Grid. Flash Grids must be defined before features such PBHA, PB Replication, and systems resources can be moved onto another system.</p>
-<p>&nbsp;</p>
 <ol>
   <li>Create partnership between 2 or more systems that will be a part of the Flash Grid. Can use either GUI or CLI.<ul>
       <li><code>mkfcpartnership</code> or <code>mkippartnership</code> – defines partnerships with FC/FCoE or IP links</li>
@@ -18,50 +17,47 @@ dateCreated: 2024-10-26T03:02:13.866Z
       <li><code>lspartnership</code> – list current partners defined to the system</li>
     </ul>
   </li>
-  <li>Ensure ‘multiple I/O group feature’ is not enabled.<ol>
-      <li>• GUI – found in GUI Features under Settings</li>
-      <li>• CLI – <code>chcompatibilitymode -disable -feature multiple_io_groups</code></li>
-    </ol>
+  <li>Ensure ‘multiple I/O group feature’ is not enabled.<ul>
+      <li>GUI – found in GUI Features under Settings</li>
+      <li>CLI – <code>chcompatibilitymode -disable -feature multiple_io_groups</code></li>
+    </ul>
   </li>
-  <li>Ensure SI control access is ‘on’<ol>
-      <li>• GUI – N/A</li>
-      <li>• CLI – <code>chsystem -storageinsightscontrolaccess -yes</code></li>
-    </ol>
+  <li>Ensure SI control access is ‘on’<ul>
+      <li>GUI – N/A</li>
+      <li>CLI – <code>chsystem -storageinsightscontrolaccess -yes</code></li>
+    </ul>
   </li>
-  <li>Ensure a ‘truststore’ has been created for system to be partnered with AND restapi is ‘on’.</li>
+  <li>Ensure a ‘truststore’ has been created for system to be partnered with AND restapi is ‘on’.<ul>
+      <li>GUI – N/A</li>
+      <li>CLI –<ul>
+          <li><code>lstruststore</code> – lists defined truststore. If partnership was created, then should see an entry TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.</li>
+          <li>cht<code>ruststore -restapi on x</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>- where x = id of truststore</li>
+  <li>mktrustore -file xy -name abc -restapi on’</li>
+  <li>where xy = location of certificate file</li>
+  <li>where abc = name for truststore that will be created</li>
+  <li>Create Flash Grid.</li>
+  <li>GUI – N/A</li>
+  <li>CLI – ‘manageflashgrid -create -name flash_grid_name’</li>
+  <li>Join system to Flash Grid</li>
+  <li>GUI – N/A</li>
+  <li>CLI – ‘manageflashgrid -join -ip target_ip_address -truststore id/name’</li>
+  <li>target_ip_address = IP of the system to join</li>
+  <li>Accept system to the Flash Grid</li>
+  <li>GUI – N/A</li>
+  <li>CLI – ‘manageflashgrid -accept -ip remote_ip_address -truststore id/name’</li>
+  <li>remote_ip_address = ip of system requesting</li>
+  <li>Flash Grid verification</li>
+  <li>GUI – N/A</li>
+  <li>CLI – ‘lssystem |grep flash_grid’</li>
+  <li>Should see flash_grid_name match name given in step 5 above.</li>
+  <li>Verify the newly created Flash Grid has been picked up in Storage Insights.</li>
+  <li>At this time it will take at least 5mins or more. Sometime almost 12hours.</li>
 </ol>
-<p>• GUI – N/A</p>
-<p>• CLI –</p>
-<p>o ‘lstruststore’ – lists defined truststore. If partnership was created, then should see an entry TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.</p>
-<p>&nbsp;</p>
-<p>o ‘chtruststore -restapi on x’</p>
-<p>- where x = id of truststore</p>
-<p>&nbsp;</p>
-<p>o ‘mktrustore -file xy -name abc -restapi on’</p>
-<p>- where xy = location of certificate file</p>
-<p>- where abc = name for truststore that will be created</p>
-<p>&nbsp;</p>
-<p>5. Create Flash Grid.</p>
-<p>• GUI – N/A</p>
-<p>• CLI – ‘manageflashgrid -create -name flash_grid_name’</p>
-<p>&nbsp;</p>
-<p>6. Join system to Flash Grid</p>
-<p>• GUI – N/A</p>
-<p>• CLI – ‘manageflashgrid -join -ip target_ip_address -truststore id/name’</p>
-<p>o target_ip_address = IP of the system to join</p>
-<p>&nbsp;</p>
-<p>7. Accept system to the Flash Grid</p>
-<p>• GUI – N/A</p>
-<p>• CLI – ‘manageflashgrid -accept -ip remote_ip_address -truststore id/name’</p>
-<p>o remote_ip_address = ip of system requesting</p>
-<p>&nbsp;</p>
-<p>8. Flash Grid verification</p>
-<p>• GUI – N/A</p>
-<p>• CLI – ‘lssystem |grep flash_grid’</p>
-<p>o Should see flash_grid_name match name given in step 5 above.</p>
-<p>&nbsp;</p>
-<p>9. Verify the newly created Flash Grid has been picked up in Storage Insights.</p>
-<p>At this time it will take at least 5mins or more. Sometime almost 12hours.</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
