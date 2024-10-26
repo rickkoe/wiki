@@ -2,7 +2,7 @@
 title: Flash Grid, Partitions, and Policy-Based Features
 description: 
 published: true
-date: 2024-10-26T03:13:03.725Z
+date: 2024-10-26T03:17:00.957Z
 tags: flash grid, pbr, pbha, ha
 editor: ckeditor
 dateCreated: 2024-10-26T03:02:13.866Z
@@ -67,33 +67,13 @@ dateCreated: 2024-10-26T03:02:13.866Z
     </ul>
   </li>
 </ol>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>Partition Migration</p>
-<p>To use this feature for migration the current Flash System should be in the same Flash Grid.</p>
-<p>Any async replications must be removed before you can move the partition to another Flash System.</p>
-<p>The target Flash System should have connectivity to the Host/s that are currently utilizing the Flash System that will be migrated.</p>
+<h1>Partition Migration</h1>
+<p>To use this feature for migration the current Flash System should be in the same Flash Grid.<br>Any async replications must be removed before you can move the partition to another Flash System.<br>The target Flash System should have connectivity to the Host/s that are currently utilizing the Flash System that will be migrated.</p>
 <p>Steps:</p>
-<p>1. Run cli command ‘lspartnership’. Ensure target system is listed in output.</p>
-<p>This will also provide the id name for the target system which can be useful when verifying if a truststore was automatically created when setting up the grid.</p>
-<p>2. Run cli command ‘lsstruststore’ be sure one exists between the target and source. One should exist between the two Flash Systems. Clients may create their own before joining systems to the grid.</p>
-<p>Default names start with TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.</p>
-<p>&nbsp;</p>
-<p>After verification of steps 1 and 2 proceed to move the partition to the desired location.</p>
-<p>&nbsp;</p>
-<p>3. Run cli command “chpartition location_sys_name partition_name” &nbsp;</p>
-<p>&nbsp;</p>
-<p>Example. chpartition FS5200_DR “FS9200 Demo”</p>
-<p>&nbsp;</p>
-<p>Note:</p>
-<p>• If names have space put them in quotes.</p>
-<p>• Run “catauditlog -showhidden” command to see progress.</p>
-<p>• Issue “lspartition” to see status of move should see status “establishing synchronizing” in output.</p>
-<p>&nbsp;</p>
-<p>4. Will see following description in event listing when move was successful. Also list partition and system should no longer show the partition that was migrated.</p>
-<p>“Storage partition migration completed successfully”</p>
+<ol>
+  <li>Run cli command ‘lspartnership’. Ensure target system is listed in output.<br>This will also provide the id name for the target system which can be useful when verifying if a truststore was automatically created when setting up the grid.</li>
+  <li>Run cli command <code>lsstruststore</code> be sure one exists between the target and source. One should exist between the two Flash Systems. Clients may create their own before joining systems to the grid.<br><br>Default names start with TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.<br>After verification of steps 1 and 2 proceed to move the partition to the desired location.</li>
+  <li>Run cli command <code>chpartition location_sys_name partition_name</code><br>Example.&nbsp;<br>chpartition FS5200_DR “FS9200 Demo"<br>Note:<br>If names have space put them in quotes.<br>Run “catauditlog -showhidden” command to see progress.<br>Issue “lspartition” to see status of move should see status “establishing synchronizing” in output.</li>
+  <li>Will see following description in event listing when move was successful. Also list partition and system should no longer show the partition that was migrated<br>“Storage partition migration completed successfully”</li>
+</ol>
 <p>&nbsp;</p>
