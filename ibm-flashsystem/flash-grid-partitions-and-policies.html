@@ -2,7 +2,7 @@
 title: Flash Grid, Partitions, and Policy-Based Features
 description: 
 published: true
-date: 2024-10-26T03:09:23.223Z
+date: 2024-10-26T03:13:03.725Z
 tags: flash grid, pbr, pbha, ha
 editor: ckeditor
 dateCreated: 2024-10-26T03:02:13.866Z
@@ -31,32 +31,41 @@ dateCreated: 2024-10-26T03:02:13.866Z
       <li>GUI – N/A</li>
       <li>CLI –<ul>
           <li><code>lstruststore</code> – lists defined truststore. If partnership was created, then should see an entry TS_xxxxxxxxxxxxxxxx where x’s will be the id of the system.</li>
-          <li>cht<code>ruststore -restapi on x</code></li>
+          <li><code>chtruststore -restapi on x</code> - where x = id of truststore</li>
+          <li>mktrustore -file xy -name abc -restapi on</li>
+          <li>where xy = location of certificate file</li>
+          <li>where abc = name for truststore that will be created</li>
         </ul>
       </li>
     </ul>
   </li>
-  <li>- where x = id of truststore</li>
-  <li>mktrustore -file xy -name abc -restapi on’</li>
-  <li>where xy = location of certificate file</li>
-  <li>where abc = name for truststore that will be created</li>
-  <li>Create Flash Grid.</li>
-  <li>GUI – N/A</li>
-  <li>CLI – ‘manageflashgrid -create -name flash_grid_name’</li>
-  <li>Join system to Flash Grid</li>
-  <li>GUI – N/A</li>
-  <li>CLI – ‘manageflashgrid -join -ip target_ip_address -truststore id/name’</li>
-  <li>target_ip_address = IP of the system to join</li>
-  <li>Accept system to the Flash Grid</li>
-  <li>GUI – N/A</li>
-  <li>CLI – ‘manageflashgrid -accept -ip remote_ip_address -truststore id/name’</li>
-  <li>remote_ip_address = ip of system requesting</li>
-  <li>Flash Grid verification</li>
-  <li>GUI – N/A</li>
-  <li>CLI – ‘lssystem |grep flash_grid’</li>
-  <li>Should see flash_grid_name match name given in step 5 above.</li>
-  <li>Verify the newly created Flash Grid has been picked up in Storage Insights.</li>
-  <li>At this time it will take at least 5mins or more. Sometime almost 12hours.</li>
+  <li>Create Flash Grid.<ul>
+      <li>GUI – N/A</li>
+      <li>CLI – ‘manageflashgrid -create -name flash_grid_name’</li>
+    </ul>
+  </li>
+  <li>Join system to Flash Grid<ul>
+      <li>GUI – N/A</li>
+      <li>CLI – ‘manageflashgrid -join -ip target_ip_address -truststore id/name’</li>
+      <li>target_ip_address = IP of the system to join</li>
+    </ul>
+  </li>
+  <li>Accept system to the Flash Grid<ul>
+      <li>GUI – N/A</li>
+      <li>CLI – ‘manageflashgrid -accept -ip remote_ip_address -truststore id/name’</li>
+      <li>remote_ip_address = ip of system requesting</li>
+    </ul>
+  </li>
+  <li>Flash Grid verification<ul>
+      <li>GUI – N/A</li>
+      <li>CLI – ‘lssystem |grep flash_grid’</li>
+      <li>Should see flash_grid_name match name given in step 5 above.</li>
+    </ul>
+  </li>
+  <li>Verify the newly created Flash Grid has been picked up in Storage Insights.<ul>
+      <li>At this time it will take at least 5mins or more. Sometime almost 12hours.</li>
+    </ul>
+  </li>
 </ol>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
