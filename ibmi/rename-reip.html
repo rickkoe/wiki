@@ -1,0 +1,40 @@
+<!--
+title: Rename/Re-IP an IBMi LPAR
+description: 
+published: true
+date: 2024-12-04T17:37:13.236Z
+tags: ibmi
+editor: ckeditor
+dateCreated: 2024-12-04T17:26:51.079Z
+-->
+
+<h1>Rename an LPAR</h1>
+<pre><code class="language-plaintext">CHGNETA</code></pre>
+<h1>Change IP Address</h1>
+<ul>
+  <li>Enter the following command to change the IP address of the LPAR</li>
+</ul>
+<pre><code class="language-plaintext">CFGTCP</code></pre>
+<p>Option 1 to create a new interface and remove old interface</p>
+<p>Option 2 to set the default route</p>
+<p>Option 11 to work with host table entries</p>
+<ul>
+  <li>Configure the lines using the following command</li>
+</ul>
+<pre><code class="language-plaintext">WRKCFGSTS *LUN</code></pre>
+<p>Option 8</p>
+<p>Option 2</p>
+<p>Change CMN#</p>
+<p>&nbsp;</p>
+<p>wrkhdwrsc *cmn (to find line adapter location for CSE)</p>
+<p>&nbsp;</p>
+<p>Wrkhdwrsc type(*cmn)</p>
+<p>&nbsp;</p>
+<p>Delete address</p>
+<p>Remove default route</p>
+<p>Next Hop is the Gateway</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>TCP/IP</p>
+<p>Option 10 Host Table</p>
+<p>Option 12 Domain Info</p>
