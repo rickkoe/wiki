@@ -2,7 +2,7 @@
 title: Migrate LTO Keys Between Servers
 description: 
 published: true
-date: 2024-12-06T02:30:51.017Z
+date: 2024-12-06T02:37:15.895Z
 tags: gklm
 editor: ckeditor
 dateCreated: 2024-11-08T06:48:31.786Z
@@ -28,14 +28,15 @@ dateCreated: 2024-11-08T06:48:31.786Z
 <h2>Import the TLS Cert Exported from New Server</h2>
 <ol>
   <li>Login as LOCAL ADMINISTRATOR</li>
+  <li>Open command prompt → Run As Administrator</li>
   <li>Change directories:</li>
 </ol>
-<pre><code class="language-plaintext">cd C:\IBM\tivoli\tiptklmV2\bin</code></pre>
-<p>&nbsp;</p>
+<pre><code class="language-plaintext">cd "\Program Files\IBM\WebSphere\AppServer\bin"</code></pre>
+<p>&nbsp; 4.&nbsp;</p>
 <ol>
   <li>Log into the Websphere CLI</li>
 </ol>
-<pre><code class="language-plaintext">wsadmin.bat -username SKLMAdmin -password &lt;put.pwd.here&gt; -lang jython</code></pre>
+<pre><code class="language-plaintext">wsadmin.bat -username SKLMAdmin -lang jython</code></pre>
 <p>&nbsp;</p>
 <ol>
   <li>List the certificates to get the 'keystore name' on that server1 as it will be used in the import certificate command:</li>
