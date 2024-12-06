@@ -2,7 +2,7 @@
 title: Migrate LTO Keys Between Servers
 description: 
 published: true
-date: 2024-12-06T03:48:03.689Z
+date: 2024-12-06T07:18:31.127Z
 tags: gklm
 editor: ckeditor
 dateCreated: 2024-11-08T06:48:31.786Z
@@ -86,6 +86,142 @@ dateCreated: 2024-11-08T06:48:31.786Z
 </ol>
 <pre><code class="language-plaintext">print AdminTask.tklmGroupEntryAdd('[-name tklmKeyGroup -type keygroup -entry "{type key} {alias aaa000000000000000019} {keyStoreName defaultKeyStore}"]')</code></pre>
 <p>&nbsp;</p>
-<ol>
-  <li>Restart sklm.</li>
-</ol>
+<p>Powershell script to assign keys to a group</p>
+<pre><code class="language-plaintext"># PowerShell script to make key group entry API calls for a range of aliases
+
+# Disable SSL certificate verification
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+
+# Prompt for username and password
+$username = Read-Host "Enter your username"
+$password = Read-Host "Enter your password" -AsSecureString
+
+# Prompt for name
+$name = Read-Host "Enter the name for the key group entries (e.g., LTO6)"
+
+# Prompt for base alias name and hex range
+$baseAliasName = Read-Host "Enter the base alias name (e.g., lto00a28a193000000)"
+$startHex = Read-Host "Enter the starting hex number (e.g., 00)"
+$endHex = Read-Host "Enter the ending hex number (e.g., AF)"
+
+# Convert SecureString to plain text (be cautious with this in production)
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)
+$plainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+
+# Convert start and end hex to decimal for range checking
+$startDecimal = [Convert]::ToInt32($startHex, 16)
+$endDecimal = [Convert]::ToInt32($endHex, 16)
+
+# Validate hex range
+if ($startDecimal -gt $endDecimal) {
+    Write-Host "Error: Start hex must be less than or equal to the end hex." -ForegroundColor Red
+    exit
+}
+
+# Define the authentication URL
+$authUrl = "https://sklm421:9443/SKLM/rest/v1/ckms/accessToken"
+$authHeaders = @{
+    "accept" = "application/json"
+    "Content-Type" = "application/json"
+}
+
+# Create the authentication request body
+$authBody = @{
+    "userid" = $username
+    "password" = $plainPassword
+} | ConvertTo-Json
+
+try {
+    # Send authentication request
+    $authResponse = Invoke-RestMethod -Uri $authUrl -Method Post -Headers $authHeaders -Body $authBody
+
+    # Extract the userAuthId from the response
+    $userAuthId = $authResponse.userAuthId
+
+    # Verify we got a valid userAuthId
+    if (-not $userAuthId) {
+        throw "Failed to retrieve userAuthId"
+    }
+
+    # API endpoint for key group entry
+    $keyGroupUrl = 'https://localhost:9443/SKLM/rest/v1/keygroupentry'
+
+    # Headers for the key group entry request
+    $keyGroupHeaders = @{
+        'accept' = 'application/json'
+        'Authorization' = "SKLMAuth userAuthId=$userAuthId"
+        'Content-Type' = 'application/json'
+    }
+
+    # Initialize results collection
+    $results = @()
+
+    # Iterate through the range of hex numbers
+    for ($currentDecimal = $startDecimal; $currentDecimal -le $endDecimal; $currentDecimal++) {
+        # Convert current decimal to 2-digit hex
+        $currentHex = "{0:X2}" -f $currentDecimal
+
+        # Construct full alias
+        $fullAlias = "alias $baseAliasName$currentHex"
+
+        # Request body for key group entry
+        $keyGroupBody = @{
+            'entry' = $fullAlias
+            'name' = $name
+        } | ConvertTo-Json
+
+        try {
+            # Make the key group entry API call
+            $keyGroupResponse = Invoke-RestMethod -Method Post -Uri $keyGroupUrl -Headers $keyGroupHeaders -Body $keyGroupBody -ContentType 'application/json'
+            
+            # Store successful result
+            $results += @{
+                Alias = $fullAlias
+                Status = "Success"
+                Response = $keyGroupResponse
+            }
+
+            Write-Host "Successfully processed alias: $fullAlias" -ForegroundColor Green
+        }
+        catch {
+            # Store failed result
+            $results += @{
+                Alias = $fullAlias
+                Status = "Failed"
+                ErrorMessage = $_.Exception.Message
+            }
+
+            Write-Host "Failed to process alias: $fullAlias" -ForegroundColor Red
+            Write-Host $_.Exception.Message
+        }
+    }
+
+    # Output summary of results
+    Write-Host "`nProcessing Summary:" -ForegroundColor Cyan
+    $successCount = ($results | Where-Object {$_.Status -eq "Success"}).Count
+    $failedCount = ($results | Where-Object {$_.Status -eq "Failed"}).Count
+
+    Write-Host "Total Aliases Processed: $($results.Count)" -ForegroundColor White
+    Write-Host "Successful Entries: $successCount" -ForegroundColor Green
+    Write-Host "Failed Entries: $failedCount" -ForegroundColor Red
+
+    # Optional: Export full results to a CSV for detailed review
+    $resultsPath = ".\KeyGroupEntryResults_$(Get-Date -Format 'yyyyMMdd_HHmmss').csv"
+    $results | Export-Csv -Path $resultsPath -NoTypeInformation
+    Write-Host "`nDetailed results exported to: $resultsPath" -ForegroundColor Cyan
+}
+catch {
+    # Top-level error handling (e.g., authentication failure)
+    Write-Host "Critical Error:" -ForegroundColor Red
+    Write-Host $_.Exception.Message
+    
+    Write-Host "Full error details:" -ForegroundColor Yellow
+    Write-Host $_.Exception | Format-List * -Force
+}
+finally {
+    # Clean up the password from memory
+    if ($BSTR) {
+        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($BSTR)
+    }
+}</code></pre>
