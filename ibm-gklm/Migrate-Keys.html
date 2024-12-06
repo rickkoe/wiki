@@ -2,57 +2,30 @@
 title: Migrate LTO Keys Between Servers
 description: 
 published: true
-date: 2024-12-06T02:25:07.351Z
+date: 2024-12-06T02:30:51.017Z
 tags: gklm
 editor: ckeditor
 dateCreated: 2024-11-08T06:48:31.786Z
 -->
 
-<h2>On NEW SKLM, do the following:</h2>
-<p>&nbsp;</p>
+<h1>On New GKLM Server</h1>
+<h2>Export TLS Certificate</h2>
 <ol>
   <li>Log into the GUI on the new SKLM Server</li>
   <li>Go to <strong>Advanced Configuration → System Certificates</strong></li>
   <li>Click the download button the the certificate used for Key serving (make note of the <strong>Alias</strong>)</li>
 </ol>
-<figure class="image"><img src="/gklm/gklm_system_cert.png"></figure>
+<figure class="image"><img src="/gklm/gklm_system_cert.png">
+  <figcaption>Download the Key Serving Certificate</figcaption>
+</figure>
 <p>&nbsp; 4. Choose DER as the file type</p>
-<figure class="image"><img src="/gklm/gklm_system_cert_der.png"></figure>
-<pre><code class="language-plaintext">cd \Program Files\IBM\WebSphere\AppServer\bin&gt;</code></pre>
-<p>&nbsp;</p>
-<ol>
-  <li>Log into the WebSphere CLI</li>
-</ol>
-<pre><code class="language-plaintext">wsadmin.bat -username SKLMAdmin -password ESI@2022bpic -lang jython</code></pre>
-<p>&nbsp;</p>
-<ol>
-  <li>Create an SSL certificate, say sslCert, on server2 if not previously done:</li>
-</ol>
-<pre><code class="language-plaintext">print AdminTask.tklmCertCreate ('[-type selfsigned -alias sslCert -cn SSLCert -keyStoreName defaultKeyStore -usage SSLSERVER -validity 9000]')</code></pre>
-<p>Where sslCert is an example for an alias label.</p>
-<ol>
-  <li>List the certificate to verify it is created or if it is already there.</li>
-</ol>
-<p><code>print AdminTask.tklmCertList()</code></p>
-<p><i>Example Output clipped as we care only about the following 3 parameters:</i></p>
-<p><i>CTGKM0001I Command succeeded.</i></p>
-<p><i>...</i></p>
-<p><i>uuid = CERTIFICATE-xxxxxxxx-xxxx-xxx-xxxx-xxxxxxxxxxxx</i></p>
-<p><i>alias(es) = sslCert</i></p>
-<p><i>key store name(s) = defaultKeyStore</i></p>
-<p><i>...</i></p>
-<p><i>Make a note of above 3 p</i>arameters as they will be used in the certificate export command:</p>
-<ol>
-  <li>Export sslCert into a file, say sslCert.der.</li>
-</ol>
-<p><code>print AdminTask.tklmCertExport ('[-uuid CERTIFICATE-b4741a9-651e699c-8825-4f55-bed6-a37067bed6a0 -format DER -fileName sslCert.der]')</code></p>
-<p>CTGKM0001I Command succeeded.</p>
-<p>C:\Program Files\IBM\WebSphere\AppServer\products\sklm\data\sslCert.der</p>
-<ol>
-  <li>Copy sslCert.der file to TKLM server1.</li>
-</ol>
-<h2>&nbsp;</h2>
-<h2>On TKLM server1, do the following:</h2>
+<figure class="image"><img src="/gklm/gklm_system_cert_der.png">
+  <figcaption>Choose DER as the filetype and click Download</figcaption>
+</figure>
+<p>&nbsp; 5. Rename the file to something simple</p>
+<p>&nbsp; 6. Copy the file to a directory on the old SKLM Server</p>
+<h1>On Old SKLM Server</h1>
+<h2>Import the TLS Cert Exported from New Server</h2>
 <ol>
   <li>Login as LOCAL ADMINISTRATOR</li>
   <li>Change directories:</li>
