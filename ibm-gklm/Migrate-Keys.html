@@ -2,7 +2,7 @@
 title: Migrate LTO Keys Between Servers
 description: 
 published: true
-date: 2024-12-06T03:45:49.299Z
+date: 2024-12-06T03:46:39.070Z
 tags: gklm
 editor: ckeditor
 dateCreated: 2024-11-08T06:48:31.786Z
@@ -37,7 +37,6 @@ dateCreated: 2024-11-08T06:48:31.786Z
 <p>&nbsp; 5. Enter the username and password in the window that pops up</p>
 <p>&nbsp; 6. List the certificates to get the 'keystore name' on that server1 as it will be used in the import certificate command:</p>
 <pre><code class="language-plaintext">print AdminTask.tklmCertList()</code></pre>
-<p>&nbsp;</p>
 <figure class="image"><img src="/gklm/sklm_tklmcertlist.png"></figure>
 <p>&nbsp; 7. Import the cert that was exported from the new GKLM server</p>
 <pre><code class="language-plaintext">print AdminTask.tklmCertImport ('[-fileName C:\\migrate\\sklm421.cer -alias tls-cert -format DER -keyStoreName "defaultKeyStore" -usage SSLSERVER]')</code></pre>
