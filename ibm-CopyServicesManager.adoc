@@ -1,3 +1,17 @@
 == header
-
 MGM-MTMM Migration
+
+Pre-Migration Setup:
+1.	Export Copy sets from the existing MGM session.
+2.	Create a MT MM-GM session and import the copy sets from step 1
+3.	On the new MT MM-GM session, click on the Modify link for the H1-J3 and H2-J3 Consistency Group in the session details panel, and set the value to match the value in the existing MGM session. 
+4.	Set property to Manage H1-H2 with Hyperswap on the new MT MM-GM session. 
+5.	Update properties on the new MT MM-GM session for any non default values that were set on the existing MGM session.
+
+CutOver(When ready to migrate):
+1.	On Server Properties add "csm.server.startmm_in_gcmode=false".   This property will prevent CSM from attempting to start the new MT MM-GM pairs in GC mode first.
+2.	Uncheck the "Manage H1-H2 with HyperSwap" on the existing MGM session.  This will purge the HyperSwap configuration so that the new session can load it.
+3.	Issue Start H1->H2->H3 command on the new MT MM-GM session IMPORTANT:  Make sure you issue the cascaded h1h2h3 command.  The MT h1h2 h1h3 command will show up on the start. 
+4.	Wait until session assimilates all the existing pairs and then loads the HyperSwap configuration.
+5.	Delete the existing MGM session from the GUI.  This removes the brains from CSM without touching the hardware.
+6.	Remove or comment out the "csm.server.startmm_in_gcmode=false" property from Server Properties
