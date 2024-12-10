@@ -1,6 +1,3 @@
-== header
-Copy Services Manager: MGM-MTMM Migration
-
 == Pre-Migration Setup:
 1.	Export Copy sets from the existing MGM session.
 2.	Create a MT MM-GM session and import the copy sets from step 1
