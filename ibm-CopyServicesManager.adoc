@@ -1,5 +1,5 @@
 == header
-MGM-MTMM Migration
+Copy Services Manager: MGM-MTMM Migration
 
 == Pre-Migration Setup:
 1.	Export Copy sets from the existing MGM session.
