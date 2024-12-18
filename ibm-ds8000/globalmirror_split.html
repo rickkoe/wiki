@@ -2,7 +2,7 @@
 title: Split Global Mirror Session
 description: 
 published: true
-date: 2024-12-17T14:38:03.646Z
+date: 2024-12-18T13:17:18.551Z
 tags: ds8000
 editor: ckeditor
 dateCreated: 2024-12-17T14:13:48.538Z
@@ -14,7 +14,7 @@ dateCreated: 2024-12-17T14:13:48.538Z
   <li>Export of the GM session copy sets from CSM provided by the client</li>
   <li>Storage Summary disk subsystem provided from client</li>
   <li>Discussion on how they want to split the session (i.e. FB &amp; CKD)</li>
-  <li>DSCLI scripts generated off copy set export and storage summary&nbsp;<ul>
+  <li>DSCLI scripts generated off copy set export and storage summary<ul>
       <li>Session # should be gathered so they can be used during validation</li>
     </ul>
   </li>
@@ -22,10 +22,10 @@ dateCreated: 2024-12-17T14:13:48.538Z
 <h2>Procedures:</h2>
 <h4><u>Create DSCLI scripts for the following:</u></h4>
 <ul>
-  <li>&nbsp;End Global Mirror processing for session</li>
+  <li>End Global Mirror processing for session</li>
   <li><code>rmgmir -quiet -lss xx -session yy</code></li>
-  <li>&nbsp;Remove volumes from Global Mirror session</li>
-  <li><code>chsession -lss xx -action -volume vvvv yy</code></li>
+  <li>Remove volumes from Global Mirror session</li>
+  <li><code>chsession -lss xx -action remove -volume vvvv yy</code></li>
   <li>Remove LSSs from the Global Mirror session</li>
   <li><code>rmsession -lss xx yy</code></li>
   <li>Issue pprc against volumes to verify state is copy-pending</li>
@@ -34,7 +34,7 @@ dateCreated: 2024-12-17T14:13:48.538Z
 <p>&nbsp;</p>
 <h4>(CSM) Copy Services Manager:</h4>
 <ol>
-  <li>Define the new sessions in CSM.&nbsp;</li>
+  <li>Define the new sessions in CSM.</li>
   <li>Add copy sets to the NEW sessions created.</li>
   <li>Start the NEW sessions</li>
   <li>Remove the old session from CSM</li>
