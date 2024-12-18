@@ -2,7 +2,7 @@
 title: Split Global Mirror Session
 description: 
 published: true
-date: 2024-12-18T20:17:50.346Z
+date: 2024-12-18T20:19:09.057Z
 tags: ds8000
 editor: ckeditor
 dateCreated: 2024-12-17T14:13:48.538Z
@@ -21,14 +21,22 @@ dateCreated: 2024-12-17T14:13:48.538Z
 </ul>
 <h1><span class="text-small">Procedures:</span></h1>
 <h2><span class="text-tiny">Create DSCLI scripts for the following:</span></h2>
-<ul>
+<ol>
   <li>End Global Mirror processing for session</li>
+</ol>
+<ul>
   <li><code>rmgmir -quiet -lss xx -session yy</code></li>
-  <li>Remove volumes from Global Mirror session</li>
+</ul>
+<p>&nbsp; 2. Remove volumes from Global Mirror session</p>
+<ul>
   <li><code>chsession -lss xx -action remove -volume vvvv-vvvv yy</code></li>
-  <li>Remove LSSs from the Global Mirror session</li>
+</ul>
+<p>&nbsp; 3. Remove LSSs from the Global Mirror session</p>
+<ul>
   <li><code>rmsession -lss xx yy</code></li>
-  <li>Issue pprc against volumes to verify state is copy-pending</li>
+</ul>
+<p>&nbsp; 4. Issue pprc against volumes to verify state is copy-pending</p>
+<ul>
   <li><code>lspprc -l -state copy-pending vvvv-vvvv</code></li>
 </ul>
 <p>&nbsp;</p>
