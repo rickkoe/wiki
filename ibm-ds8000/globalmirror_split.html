@@ -2,7 +2,7 @@
 title: Split Global Mirror Session
 description: 
 published: true
-date: 2024-12-26T16:41:00.344Z
+date: 2024-12-26T16:41:56.971Z
 tags: ds8000
 editor: ckeditor
 dateCreated: 2024-12-17T14:13:48.538Z
@@ -23,7 +23,7 @@ dateCreated: 2024-12-17T14:13:48.538Z
 <p>&nbsp;</p>
 <p><span class="text-big">A. <u>Create DSCLI scripts for the following</u></span></p>
 <ol>
-  <li>End Global Mirror processing for session<br><code>showgmir -session yy xx</code><br><br>Example:</li>
+  <li>End Global Mirror processing for session but first determine master LSS for session<br><code>showgmir -session yy xx</code><br><br>Example:</li>
 </ol>
 <pre><code class="language-plaintext">Date/Time: December 26, 2024 10:44:06 AM CST IBM DSCLI Version: 7.8.50.497 DS: IBM.2107-75KFZ21
 ID                          IBM.2107-75KFZ21/C1   &lt;-------- Master LSS for Session |
@@ -41,7 +41,6 @@ FlashCopy Sequence Number   0x676D87D7
 Master ID                   IBM.2107-75KFZ21
 Subordinate Count           0
 Master/Subordinate Assoc    -</code></pre>
-<p>&nbsp;</p>
 <ul>
   <li><code>rmgmir -quiet -lss xx -session yy</code></li>
 </ul>
