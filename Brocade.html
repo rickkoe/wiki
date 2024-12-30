@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-12-30T21:32:33.120Z
+date: 2024-12-30T21:43:02.540Z
 tags: san, brocade, public
 editor: ckeditor
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -23,66 +23,4 @@ dateCreated: 2022-02-05T18:22:09.505Z
   <li><a href="https://support.broadcom.com">Broadcom Support Portal <i>Click on <strong>Brocade Storage Networking</strong> in Header</i></a></li>
   <li><a href="https://docs.broadcom.com/doc/FOS-90x-Admin-AG">Brocade FOS Administration Guide, 9.0.x</a></li>
   <li><a href="https://docs.broadcom.com/doc/FOS-90x-Command-RM">Brocade FOS Command Reference Manual, 9.0.x</a></li>
-</ul>
-<h1>Brocade SAN Switch Licenses</h1>
-<p>In order to activate a license, you must have a <strong>Transaction Key</strong> for each license to be activated along with the <strong>License ID</strong> (LID) of the appropriate switch.</p>
-<h2>Obtaining the Transaction Key</h2>
-<p>A Transaction key is unique key, along with the LID, used to generate a software license from the Broadcom licensing portal. The transaction key is issued when a license is purchased. The transaction key is delivered in one of two methods:</p>
-<ul>
-  <li><strong>Paperpack</strong> – The transaction key is printed and delivered within a POD Optic Hardware Kit.</li>
-  <li><strong>E-license</strong> – The transaction key is contained in an email that is sent instantly to the customer after the sales order is created. The customer is sent the email message within a few minutes after the sales order is submitted, although the timing will vary depending on the network, internet connection, and so on.</li>
-</ul>
-<h2>Obtaining the License ID</h2>
-<p>You must have a license ID to generate the license file in the Broadcom licensing portal.<br>Obtain the license ID of the switch or chassis using the CLI method:</p>
-<ol>
-  <li>Connect to the switch, and log in using an account with admin permissions.</li>
-  <li>Enter the following command to display the license ID of the switch:</li>
-</ol>
-<pre><code class="language-plaintext">license --show -lid</code></pre>
-<h2>Generating a License Key</h2>
-<p>Use the following procedure to generate and obtain a FOS license key.</p>
-<ol>
-  <li>Go to <a href="https://www.broadcom.com">https://www.broadcom.com</a>, and then select the LOGIN drop-down at the top-right of the web page.</li>
-  <li>Click <strong>LOGIN</strong> or <strong>REGISTER</strong>. Once logged in, you will be redirected to the Broadcom support portal.</li>
-  <li>Click <strong>Brocade Products</strong>. You will be redirected to the Brocade Products page.</li>
-  <li>Click <strong>Licensing</strong>. You will be redirected to the Broadcom Licensing Portal page.</li>
-  <li>Enter the transaction key. Click Next to continue.</li>
-</ol>
-<blockquote>
-  <p>Re-host keys are generated only by the SANnav application and are used only on SANnav.</p>
-</blockquote>
-<ol>
-  <li>Enter the license ID (LID) that you obtained earlier in the Unit Information field. Click <strong>Next</strong> to continue.</li>
-  <li>Read the Broadcom End User License Agreement, and if you agree to the terms, select the <strong>I have read and accept</strong> checkbox.</li>
-  <li>Click <strong>Generate</strong> to generate the license.</li>
-  <li>The license key will be sent by email and can also be downloaded by selecting the blue license hyperlink from the Broadcom licensing portal UI.</li>
-  <li>If a license string is generated, save it to your local folder for future reference.</li>
-  <li>If an XML certificate file is generated, save it to the remote server, where it will be retrieved for installing the license.</li>
-</ol>
-<h2>Installing the License Using a License String</h2>
-<p>For Brocade Gen 6 switches and directors, you must pass the license key in the license --install command to install the licenses.</p>
-<ol>
-  <li>Connect to the switch, and log in using an account with admin permissions.</li>
-  <li>Activate the license using the license --install -key &lt;lic_key&gt; command.</li>
-</ol>
-<pre><code class="language-plaintext">license --install -key HP9ttZNSgmB4MCD3NmNWgQDWtAKBFtXtBSFJF</code></pre>
-<p>&nbsp;</p>
-<ol>
-  <li>Verify that the license was installed by entering the license --show command. The licensed features that are currently installed on the switch are listed. If the feature is not listed, use the license --install command to install the license.</li>
-</ol>
-<pre><code class="language-plaintext">license --show</code></pre>
-<h2>Displaying Port License Assignments</h2>
-<p>When you display the available licenses, you can also view the current port assignment of those licenses.<br>Use the following procedure to display the port license assignments.</p>
-<ol>
-  <li>Connect to the switch, and log in using an account with admin permissions.</li>
-  <li>Enter the license --show -port command to view how port licenses are currently assigned.</li>
-</ol>
-<pre><code class="language-plaintext">license --show -port</code></pre>
-<h2>Static Port Assignment</h2>
-<p>When Dynamic Ports On Demand (DPOD) is enabled, ports are licensed from a pool of available licenses based on the server blade or switch installation. Each port that is enabled will secure a license on a first-come, first-served basis. If you would like to statically assign port licenses, use the following command. Example below would reserve licenses on the first 16 ports in a switch.</p>
-<pre><code class="language-plaintext">license --reserve -port 0-15</code></pre>
-<p>Use the command in the previous section to display the port licenses after making the static assignment to ensure they were properly assigned.</p>
-<h1>SAN Health Reports</h1>
-<ul>
-  <li><a href="/brocade/brocade-san-health">Brocade SAN Health</a></li>
 </ul>
