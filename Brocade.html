@@ -2,7 +2,7 @@
 title: Brocade SAN
 description: 
 published: true
-date: 2024-12-30T21:30:12.475Z
+date: 2024-12-30T21:32:33.120Z
 tags: san, brocade, public
 editor: ckeditor
 dateCreated: 2022-02-05T18:22:09.505Z
@@ -16,6 +16,7 @@ dateCreated: 2022-02-05T18:22:09.505Z
   <li><a href="/Brocade/SAN-Health">Brocade SAN Health</a></li>
   <li><a href="/Brocade/LDAP">LDAP Configuration for Brocade</a></li>
   <li><a href="/Brocade/Validation">Commands to Validate/Document a Brocade Switch Installation</a></li>
+  <li><a href="/Brocade/Implementation">Brocade Implementation Checklist</a></li>
 </ul>
 <h1>External Documentation Links</h1>
 <ul>
@@ -23,122 +24,6 @@ dateCreated: 2022-02-05T18:22:09.505Z
   <li><a href="https://docs.broadcom.com/doc/FOS-90x-Admin-AG">Brocade FOS Administration Guide, 9.0.x</a></li>
   <li><a href="https://docs.broadcom.com/doc/FOS-90x-Command-RM">Brocade FOS Command Reference Manual, 9.0.x</a></li>
 </ul>
-<h1>Implementation</h1>
-<h2>Implementation Checklist</h2>
-<p>These are the typical items that should be reviewed and/or configured when setting up a new Brocade SAN switch/director. While many of these settings can be set in WebTools, the CLI commands are listed here for a simlper checklist.</p>
-<h3>User Settings</h3>
-<ul>
-  <li>Set admin password to pre-defined password</li>
-</ul>
-<pre><code class="language-plaintext">passwd</code></pre>
-<h3>Name and Address</h3>
-<ul>
-  <li>Set the switch name</li>
-</ul>
-<pre><code class="language-plaintext">switchname new_name</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Set IP address, subnet mask, gateway</li>
-</ul>
-<pre><code class="language-plaintext">ipaddrset</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Set the Registered Organization Name <strong>(Directors Only)</strong></li>
-</ul>
-<pre><code class="language-plaintext">ron --set &lt;customer_name&gt;</code></pre>
-<h3>Data Center Settings</h3>
-<ul>
-  <li>Verify Management Port Speed (Default is 1000-auto, but some customers need this set to 100-full)</li>
-</ul>
-<pre><code class="language-plaintext"># If 100-full is required
-ethif --set eth0 -an off -speed 100 -duplex full
-
-# Validate
-ethif --show eth0</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Configure timezone</li>
-</ul>
-<pre><code class="language-plaintext">tstimezone America/Chicago</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Reboot to make new timezone effective (do this before configurating the clock)</li>
-</ul>
-<pre><code class="language-plaintext">reboot</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Configure clock</li>
-</ul>
-<pre><code class="language-plaintext">date mmddHHMMyy</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Configure DNS</li>
-</ul>
-<pre><code class="language-plaintext">dnsconfig --add -domain &lt;domain_name&gt; -serverip1 &lt;ip_address_1&gt; -serverip2 &lt;ip_address_2&gt;</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Configure NTP server</li>
-</ul>
-<pre><code class="language-plaintext">tsclockserver "ntp_server_name"</code></pre>
-<p>&nbsp;</p>
-<ul>
-  <li>Configure SMTP server</li>
-</ul>
-<pre><code class="language-plaintext">relayConfig --config -rla_ip &lt;relay IP&gt; -rla_dname &lt;domain name&gt;</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><a href="/san/brocade/ldap-switch"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure LDAP (optional)</span></label></a></li>
-</ul>
-<h3>Licenses</h3>
-<p><a href="/san/brocade/license">Apply new licenses</a> (POD, etc.)</p>
-<p>Verify licenses (POD, etc.)</p>
-<pre><code class="language-plaintext">licenseshow</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><a href="/san/brocade/license#static-port-assignment"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Assign static port licenses</span></label></a></li>
-</ul>
-<h3>Firmware</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update FOS&nbsp;</span></label></li>
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure domain id and set insistent domain ID</span></label></li>
-</ul>
-<pre><code class="language-plaintext">switchdisable ; configure</code></pre>
-<h3>Zone Config</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default zone policy to No Access</span></label></li>
-</ul>
-<pre><code class="language-plaintext">defzone --noaccess ; cfgsave</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure zoning</span></label></li>
-</ul>
-<h3>Optional</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Persistent disable all ports</span></label></li>
-</ul>
-<pre><code class="language-plaintext">portcfgpersistentdisable 3/0-47
-portcfgpersistentdisable 4/0-47
-portcfgpersistentdisable 5/0-47
-portcfgpersistentdisable 6/0-47
-portcfgpersistentdisable 9/0-47
-portcfgpersistentdisable 10/0-47
-portcfgpersistentdisable 11/0-47
-portcfgpersistentdisable 12/0-47</code></pre>
-<h3>MAPS</h3>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable a policy</span></label></li>
-</ul>
-<pre><code class="language-plaintext">mapspolicy --show -summary
-mapspolicy --enable dflt_conservative_policy</code></pre>
-<p>&nbsp;</p>
-<ul class="todo-list">
-  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Verify policy is active</span></label></li>
-</ul>
-<pre><code class="language-plaintext">mapsconfig --show
-mapsconfig --actions raslog,email
-mapsConfig --emailcfg -address rick.k@evolvingsol.com
-mapsconfig --show
-mapsconfig --testmail -subject "this is a test" -message "test email body"</code></pre>
 <h1>Brocade SAN Switch Licenses</h1>
 <p>In order to activate a license, you must have a <strong>Transaction Key</strong> for each license to be activated along with the <strong>License ID</strong> (LID) of the appropriate switch.</p>
 <h2>Obtaining the Transaction Key</h2>
