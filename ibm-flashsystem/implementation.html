@@ -1,0 +1,543 @@
+<!--
+title: FlashSystem Implementation
+description: 
+published: true
+date: 2024-12-30T22:23:17.762Z
+tags: ibm, storage, flashsystem
+editor: ckeditor
+dateCreated: 2023-01-22T14:49:57.535Z
+-->
+
+<h1>Cheat Sheet</h1>
+<p>List current date and time</p>
+<pre><code class="language-plaintext">svqueryclock</code></pre>
+<p>Recover offline volumes (i/o group went offline and lose cache)</p>
+<pre><code class="language-plaintext">  recovervdiskbysystem</code></pre>
+<p>Manually resuming code activation</p>
+<pre><code class="language-plaintext">  lsupdate
+  applysoftware -continue</code></pre>
+<p>Restart Web Service</p>
+<pre><code class="language-plaintext">  satask restartservice -service tomcat</code></pre>
+<p>IP Replication requires the following firewall ports opened:</p>
+<ul>
+  <li>Cluster IPs: 3260</li>
+  <li>Data IPs: 3265</li>
+</ul>
+<p>Script to Rename Volumes</p>
+<pre><code class="language-plaintext">  lsvdisk -nohdr | grep -v scsi | while read -a line ; do new_name=${line[1]//msc520/bscbak};new_name=${new_name%_01} ; chvdisk -name $new_name ${line[1]}; done</code></pre>
+<p>Script to validate cabling</p>
+<pre><code class="language-plaintext">  lsportfc -nohdr | while read -a port; do printf "%s,port%s," "${port[6]}" "${port[2]}"; lsportfc "${port[0]}" | grep fabric_WWN ; done</code></pre>
+<h3>Snapshot and Restore a Single Volume</h3>
+<ul>
+  <li>Identify the name of the volume to snapshot. &nbsp;e.g. snap_test_00</li>
+  <li>Via CLI, issue this command to snapshot</li>
+</ul>
+<pre><code class="language-plaintext">addsnapshot -volumes snap_test_00</code></pre>
+<p>&nbsp;</p>
+<ul>
+  <li>List the snapshots to verify and make note of the snapshot ID</li>
+</ul>
+<pre><code class="language-plaintext">lsvolumegroupsnapshot | grep -i snap_test_00</code></pre>
+<p>&nbsp;</p>
+<ul>
+  <li>Restore the snapshot over the original volume</li>
+</ul>
+<pre><code class="language-plaintext">restorefromsnapshot -snapshotid 135 -volumes snap_test_00</code></pre>
+<h1>Implementation</h1>
+<h2>Implementation Checklist</h2>
+<blockquote>
+  <p>This is not an official instruction manual from IBM. Alway refer to the latest IBM docs if you are unsure about how to complete a step in the list below.</p>
+</blockquote>
+<p>The following items are a summary of the most common steps that need to be completed on every implementation. &nbsp;Some items may not pertain to specific hardware configs (e.g. IP replication), but verifying installs using this list will cover the most critical aspects of a thorough implementation.</p>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Power Up</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure cluster using the </span></label><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=system-initializing-technician-port-ssr-task"><label class="todo-list__label"><span class="todo-list__label__description">technician port</span></label></a></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Use a web browser to open:&nbsp;</span></label><i><label class="todo-list__label"><span class="todo-list__label__description">https://your_management_IP</span></label></i></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Log in to the management GUI for the first time by using ID&nbsp;</span></label><i><label class="todo-list__label"><span class="todo-list__label__description">superuser</span></label></i><label class="todo-list__label"><span class="todo-list__label__description">&nbsp;and password&nbsp;</span></label><i><label class="todo-list__label"><span class="todo-list__label__description">passw0rd</span></label></i><label class="todo-list__label"><span class="todo-list__label__description">.</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">After you log in, the initial setup wizard helps you get started. &nbsp;Use the information on your </span></label><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=planning-worksheets"><label class="todo-list__label"><span class="todo-list__label__description">worksheets</span></label></a><label class="todo-list__label"><span class="todo-list__label__description"> to inform your inputs.</span></label>
+    <ul class="todo-list">
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Welcome</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">License Agreement</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Change Password</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">System Name</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Licensed Functions</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Date and Time</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Encryption (license required)</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Call Home</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Storage Insights</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Support Assistance</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Automatic Configuration</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Summary</span></label></li>
+    </ul>
+  </li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Add additional Control or Expansion Enclosures (if required)</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure the following:</span></label>
+    <ul class="todo-list">
+      <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=problem-procedure-changing-service-ip-address-node-canister"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the Service IPs</span></label></a></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Ethernet IPs for ISCSI or IP replication</span></label></li>
+      <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=overview-portsets"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Ethernet Portsets</span></label></a></li>
+      <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=volumes-volume-protection"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Volume Protection (recommend leaving on)</span></label></a></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Call Home / Email Notifications</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">SNMP</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Syslog</span></label></li>
+      <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">LDAP (if desired)</span></label></li>
+    </ul>
+  </li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable Encryption (</span></label><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=management-enabling-encryption-usb-flash-drives"><label class="todo-list__label"><span class="todo-list__label__description">USB</span></label></a><label class="todo-list__label"><span class="todo-list__label__description"> or </span></label><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=management-enabling-encryption-key-servers"><label class="todo-list__label"><span class="todo-list__label__description">SKLM</span></label></a><label class="todo-list__label"><span class="todo-list__label__description">)</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Create encrypted pool with data reduction turned off and 1024 extent size (default in GUI)</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Add storage to the pool (DRAID6, typically take all defaults in GUI).</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Modify I/O Group bitmap space (CLI or now in GUI of newer code)</span></label></li>
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Modify fibre channel port masking (if needed for replication)</span></label></li>
+  <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=updating-system-software"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update System Software</span></label></a></li>
+  <li><a href="https://www.ibm.com/docs/en/flashsystem-7x00/8.4.x?topic=software-updating-drive-firmware"><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update Drive Firmware</span></label></a></li>
+</ul>
+<h2>Port Planning</h2>
+<h3>Planning for more than four fabric ports per node canister</h3>
+<p>Last Updated: 2023-06-08</p>
+<p>You can use more than four fabric ports per to improve peak load I/O performance, but careful planning is needed.</p>
+<p>A <i>fabric port</i> is a Fibre Channel port. If you use more than four fabric ports per node, you must either use the <strong>localfcportmask</strong> and <strong>partnerfcportmask</strong> commands or be careful with your fabric zoning configuration.</p>
+<p>Careful zoning improves resilience and prevents lease expires due to port errors, low fabric buffer credits, shared adapter resources, or push-back from remote links. Table 1 displays a port allocation scheme.</p>
+<p>Table 1. Port allocation scheme</p>
+<figure class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>Adapter</th>
+        <th>Port</th>
+        <th>4 ports</th>
+        <th>8 ports</th>
+        <th>12 ports</th>
+        <th>16 ports</th>
+        <th>SAN Fabric</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Adapter 1 Port 1</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>A</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 1 Port 2</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>B</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 1 Port 3</td>
+        <td>Intracluster and Replication</td>
+        <td>Intracluster</td>
+        <td>Intracluster</td>
+        <td>Intracluster</td>
+        <td>A</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 1 Port 4</td>
+        <td>Intracluster and Replication</td>
+        <td>Intracluster</td>
+        <td>Intracluster</td>
+        <td>Intracluster</td>
+        <td>B</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 2 Port 1</td>
+        <td>-</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>A</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 2 Port 2</td>
+        <td>-</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>Host and Storage</td>
+        <td>B</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 2 Port 3</td>
+        <td>- Intracluster or Replication Replication or Host and Storage Replication or Host and Storage A</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 2 Port 4</td>
+        <td>- Intracluster or Replication Replication or Host and Storage Replication or Host and Storage B</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 3 Port 1</td>
+        <td>- - Host and Storage Host and Storage A</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 3 Port 2</td>
+        <td>- - Host and Storage Host and Storage B</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 3 Port 3</td>
+        <td>- - Intracluster Intracluster A</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 3 Port 4</td>
+        <td>- - Intracluster Intracluster B</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 4 Port 1</td>
+        <td>- - - Host and Storage A</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 4 Port 2</td>
+        <td>- - - Host and Storage B</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 4 Port 3</td>
+        <td>- - - Replication or Host and Storage A</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Adapter 4 Port 4</td>
+        <td>- - - Replication or Host and Storage B</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>localfcportmask 1100 11001100 or 00001100 110000001100 0000110000001100 -</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>remotefcportmask 1100 00000000 or 11000000 000011000000 1100000011000000 -</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<p>Host refers to host objects defined in the system.<br>Replication refers to nodes that are part of a different cluster.<br>Storage refers to controller objects defined in the system if external storage is being used.<br>Intracluster refers to nodes within the same cluster.<br>The word "and" indicates that both types are used.<br>The word "or" indicates that one of the options must be selected. If using replication, preference should be given to replication.<br>If a receives more than 16 logins from another node, then it causes node error 860.</p>
+<p>You can ensure that no more than 16 logins are received by following these guidelines:<br>Zone the SAN fabric to reduce the number of paths between the nodes.<br>Apply a local Fibre Channel port mask (if the nodes are within the same system) or partner Fibre Channel port mask (if the nodes are in different systems) to reduce the number of ports that are being used for node-to-node communication.<br>Provide a combination of the two (zoning and port masks).<br>To avoid receiving node error 860 and to maximize performance on your system, follow these guidelines:<br>For redundancy, use a minimum of two ports. If ports are being dedicated for different types of traffic, assign a minimum of two ports for each type of traffic.<br>Within a system, up to 50% of the overall data that is transferred across the SAN is transmitted between the nodes. However, for read-intensive workloads, the figure is much less. Therefore, if ports are being dedicated for different types of traffic, assign between 1/4 and 1/2 of the overall ports for node-to-node communication within a system.<br>For replication between systems, the connection between the systems is usually the bottleneck. Other than for redundancy, there is no point in having more SAN connections than there is bandwidth. For example, if two sites are connected with a 10 Gbps link, two 8 Gbps ports are sufficient. Systems usually are configured with two ports per node for replication traffic primarily for redundancy. For systems with larger numbers of nodes, it might be appropriate to have connections only from a subset of the nodes for replication to a remote system. The system automatically forwards replication traffic between local nodes so that all nodes can still participate in replication.</p>
+<h3>Safguarded Copy Implementation</h3>
+<h4>What if the pools fills up?</h4>
+<p>There is a system wide setting that is set by using the <code>chsystem</code> command that will dictate what happens to safeguarded snapshots and their source volumes when you run out of space in the pool.<br>You can check your current setting by using the command</p>
+<pre><code class="language-plaintext">lssystem | grep parent
+</code></pre>
+<p>There are two options for snapshot behavior if the pool fills up.</p>
+<ul>
+  <li>Default behavior is that the prod volume will go offline to protect the snapshots (similar to what happened when child pool filled up with the old safeguarded backups).</li>
+</ul>
+<pre><code class="language-plaintext">chsystem -snapshotpreserveparent no
+</code></pre>
+<ul>
+  <li>Optional behavior is to keep the prod volumes online and have the oldest snapshot deleted:</li>
+</ul>
+<pre><code class="language-plaintext">chsystem -snapshotpreserveparent yes
+</code></pre>
+<figure class="image"><img src="assets/images/snapshot-preserve-parent.png" alt="Snapshot preserve parent help"></figure>
+<h3>Spectrum Virtualize Remote Support IP Addresses</h3>
+<p><strong><u>Firewall Configuration</u></strong></p>
+<p>Any firewall holes that were created to allow connections to the current IP addresses must be updated with the new IP addresses.</p>
+<figure class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Source</th>
+        <th>Target</th>
+        <th>Port</th>
+        <th>Protocol</th>
+        <th>Direction</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Existing Remote Support Servers<br><br><i>These firewall holes can be removed once new servers are configured and running</i></td>
+        <td>The service IP address of every node or node canister</td>
+        <td>129.33.206.139 204.146.30.139</td>
+        <td>22</td>
+        <td>ssh</td>
+        <td>Outbound only</td>
+      </tr>
+      <tr>
+        <td>New Remote Support Servers</td>
+        <td>The service IP address of every node or node canister</td>
+        <td>170.225.126.11<br><br>170.225.126.12<br><br>170.225.127.11<br><br>170.225.127.12</td>
+        <td>22</td>
+        <td>ssh</td>
+        <td>Outbound only</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h4>IP address details</h4>
+<p>The new IP addresses for remote support are:</p>
+<ul>
+  <li>170.225.126.11 - <a href="http://xrsc-front-srv-1.southdata.ibm.com">xrsc-front-srv-1.southdata.ibm.com</a></li>
+  <li>170.225.126.12 - <a href="http://xrsc-front-srv-2.southdata.ibm.com">xrsc-front-srv-2.southdata.ibm.com</a></li>
+  <li>170.225.127.11 - <a href="http://xrsc-front-srv-3.eastdata.ibm.com">xrsc-front-srv-3.eastdata.ibm.com</a></li>
+  <li>170.225.127.12 - <a href="http://xrsc-front-srv-4.eastdata.ibm.com">xrsc-front-srv-4.eastdata.ibm.com</a></li>
+</ul>
+<h4>Fix Central Code Download - Firewall Configuration</h4>
+<p>IBM Announced in <a href="https://www.ibm.com/support/pages/node/6573219">https://www.ibm.com/support/pages/node/6573219</a> that there would be a number of changes to some central support infrastructure.</p>
+<p>!!! info</p>
+<pre><code class="language-plaintext">- Direct connection to Fix Central on port 22 was deprecated in V8.4.2.&nbsp; Systems running V8.4.2 or higher download code via esupport.ibm.com on port 443.
+- The Fix Central DNS names were updated to point to the new IP addresses on 4 June 2022.&nbsp; Storage Virtualize devices use DNS to connect to Fix Central, therefore all connections will automatically be connecting to the new IP addresses.
+</code></pre>
+<figure class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Source</th>
+        <th>Target</th>
+        <th>Port</th>
+        <th>Protocol</th>
+        <th>Direction</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>New Fix Central IP addresses</td>
+        <td>The service IP address of every node or node canister</td>
+        <td>170.225.126.44</td>
+        <td>22</td>
+        <td>sftp</td>
+        <td>Outbound only</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<p><strong><u>Additional IBM Support IP address changes that do not affect Storage Virtualize products.</u></strong></p>
+<p>The following notification was sent out relating to additional IP address changes.&nbsp; These changes do not affect Storage Virtualize products</p>
+<p><a href="https://www.ibm.com/support/pages/node/6587781">https://www.ibm.com/support/pages/node/6587781</a></p>
+<p>&nbsp;</p>
+<h2>Support Procedures</h2>
+<h3>Export Config XML File</h3>
+<ol>
+  <li>Log into the GUI</li>
+  <li>In the left menu, select Settings → Support<br>&nbsp;</li>
+</ol>
+<figure class="image"><img src="assets/images/config-xml-1.png" alt="Support"></figure>
+<ol>
+  <li>Select Support Package and click on the Download Support Package option and choose Download Existing Package<br>&nbsp;</li>
+</ol>
+<figure class="image"><img src="assets/images/config-xml-2.png" alt="Support Package"></figure>
+<ol>
+  <li>In the filter on the top right, enter <code>cron.xml</code> and hit enter. Select the file, and click Download<br>&nbsp;</li>
+</ol>
+<figure class="image"><img src="assets/images/config-xml-3.png" alt="Filter"></figure>
+<ol>
+  <li>The file will be downloaded by your browser (typically to your Download folder).</li>
+</ol>
+<h2>Wiping a System to Return/Resell</h2>
+<h3>Erase All Drives</h3>
+<p>Delete all volumes and pools</p>
+<p>Ensure all drives are in <u>candidate</u> use state</p>
+<pre><code class="language-plaintext"> lsdrive
+</code></pre>
+<p>Erase all drives using this script</p>
+<pre><code class="language-plaintext"> lsdrive -nohdr | while read -a line ; do chdrive -task erase ${line[0]} ; done
+</code></pre>
+<p>Verify erasure completion</p>
+<pre><code class="language-plaintext"> lsdriveprogress
+</code></pre>
+<h3>Reset System to Factory Defaults</h3>
+<p>Delete all hosts, volumes, and pools</p>
+<p>As superuser, ssh into the service IP node 1 and issue the following:</p>
+<pre><code class="language-plaintext"> sainfo lsservicenodes
+ satask startservice -force &lt;node2_panel_name&gt;
+ satask startservice -force &lt;node1_panel_name&gt;
+</code></pre>
+<p>Log back into node 1 service IP and issue the following (ensure both nodes are in service):</p>
+<pre><code class="language-plaintext"> sainfo lsservicenodes 
+ satask leavecluster -force &lt;node2_panel_name&gt;
+ satask leavecluster -force &lt;node1_panel_name&gt;
+</code></pre>
+<p>!!! note</p>
+<pre><code class="language-plaintext">The previous steps will reset the superuser password back to factory defaults.  Use **passw0rd** as the password going forward
+</code></pre>
+<p>Log back into node 1 service IP and issue the following (ensure ‘cluster_id’, ‘cluster_name’, ‘node_name’ are blank):</p>
+<pre><code class="language-plaintext"> sainfo lsservicenodes 
+ satask chvpd -resetclusterid &lt;node2_panel_name&gt;
+ satask chvpd -resetclusterid &lt;node1_panel_name&gt;
+</code></pre>
+<p>Reboot the nodes:</p>
+<pre><code class="language-plaintext"> satask stopnode -reboot &lt;node2_panel_name&gt;
+ satask stopnode -reboot &lt;node1_panel_name&gt;
+</code></pre>
+<p>Log back into node 1 service IP and issue the following (both nodes should show 'node_status' as <u>Candidate</u> ):</p>
+<pre><code class="language-plaintext"> sainfo lsservicenodes 
+</code></pre>
+<h2>Scripts</h2>
+<h3>Determine Remote Copy Status</h3>
+<h4>Objective</h4>
+<p>This script will list the progress of all remote copy relationships defined on the system. &nbsp;It will output the source volume name followed by the “progress” percentage.</p>
+<p>!!! note</p>
+<pre><code class="language-plaintext">This is based on the OLD remote copy technology.  This should not be used for Policy Based Replication
+</code></pre>
+<h4>Script Syntax</h4>
+<pre><code class="language-typescript">lsrcrelationship -nohdr | while read -a relationship
+do echo "Volume Name:  "${relationship[5]}
+lsrcrelationship ${relationship[0]}|grep progress
+echo
+done
+</code></pre>
+<h4>Example output:</h4>
+<pre><code class="language-plaintext">Volume Name:  Thor_0
+progress 99	
+
+Volume Name:  Thor_1
+progress 99
+
+Volume Name:  Thor_2
+progress 99
+
+Volume Name:  Thor_3
+progress 99
+
+Volume Name:  Thor_4
+progress 99
+
+Volume Name:  Thor_5
+progress 99
+
+Volume Name:  Thor_IASP1_0
+progress 99
+
+Volume Name:  Thor_IASP1_1
+progress 99
+
+Volume Name:  Thor_IASP1_2
+progress 99
+
+Volume Name:  Thor_IASP1_3
+progress 99
+
+Volume Name:  Thor_IASP1_4
+progress 100
+</code></pre>
+<h3>Validate Fibre Channel Host Connectivity Script</h3>
+<h4>Objective</h4>
+<p>This script will display all of the SAN fabric connectivity for each defined Host and indicate what port the host is connected through.</p>
+<h4>Script Syntax</h4>
+<pre><code class="language-typescript">svcinfo lshost -nohdr|while read -a host
+do
+  printf "\n%-20s\n" ${host[1]}
+  svcinfo lsnode -nohdr |while read -a node
+  do
+  printf "\nnode %s " ${node[1]}
+    for port in 1 2 3 4
+    do
+      printf "-"
+      svcinfo lsfabric -nohdr -host ${host[1]} |while read -a fabric
+      do
+        [[ ${fabric[2]} == ${node[0]} &amp;&amp; ${fabric[5]} == $port ]] &amp;&amp; printf "\b\033[01;3%dm$port\033[0m" $((${#fabric[7]}/2-1))
+      done
+    done
+  done
+  printf "\n"
+done
+</code></pre>
+<h4>Example output:</h4>
+<pre><code class="language-plaintext">esx20               
+
+node node1 12--
+node node2 12--
+
+esx21               
+
+node node1 12--
+node node2 12--
+
+esx22               
+
+node node1 12--
+node node2 12--
+
+esx23               
+
+node node1 12--
+node node2 12--
+
+esx24               
+
+node node1 12--
+node node2 12--
+
+rick-w2019          
+
+node node1 --3-
+node node2 --3-
+
+esx11               
+
+node node1 12--
+node node2 12--
+
+test                
+
+node node1 -2--
+node node2 -2--
+</code></pre>
