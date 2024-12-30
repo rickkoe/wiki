@@ -1,0 +1,142 @@
+<!--
+title: Splitting a Cluster with 2x FlashSystems
+description: 
+published: true
+date: 2024-12-30T22:26:04.680Z
+tags: cluster, split
+editor: ckeditor
+dateCreated: 2024-11-06T22:39:35.699Z
+-->
+
+<h1>Splitting a Cluster with Multiple I/O Groups</h1>
+<p>With the introduction of &nbsp;Flash Grids previous limitations have been lifted from the previous technology of clustering FlashSystems/SVC systems. Scale-out for I/O groups, having like hardware, objects counts, and migrations have been improved with introducing Flash Grid and Policy-Based Replication and HA. In In order to utilize IBM FlashSystem new advancements traditional clustering of systems must be removed.&nbsp;<br><br>Below are procedures to split the cluster into separate I/O Groups or rather single system entities.&nbsp;</p>
+<p>This procedure can be applied to multiple volumes therefore scripting the process will more than likely be more efficient.&nbsp;<br>&nbsp;</p>
+<hr>
+<p><span class="text-big">The following names will be used:</span></p>
+<p><strong>Target System Name = </strong>FS5200</p>
+<p><strong>Target IO Group =</strong> iogrp0-FS200<i> &nbsp;</i></p>
+<p><strong>Target Pool = </strong>FS5200pool0<i>.&nbsp;</i></p>
+<p><i>-----------------------------------------------------------</i></p>
+<p><strong>Source System Name =</strong><i> </i>FS5200_DR<i>&nbsp;</i></p>
+<p><strong>Source IO Group = </strong>iogroup1-FS5200_DR</p>
+<p><strong>Source Pool Name = </strong>FS5200_DRpool0<br>&nbsp;</p>
+<blockquote>
+  <p><span class="text-big"><i>Ensure the following requirements are met before setting up</i></span></p>
+</blockquote>
+<ul>
+  <li><i>Zoning should be in place so Host connectivity is available to all systems that will be part of the setup if implementing HA or planning partition migration.</i></li>
+  <li><i>Code Level is at 8.7.0 or above</i></li>
+  <li><i>Remove all volume snapshots&nbsp;</i></li>
+</ul>
+<p>&nbsp;</p>
+<h5><span class="text-big">Migrate Volumes &nbsp;to</span> <span class="text-big">"<strong>iogrp0-FS200</strong>”</span></h5>
+<p><span class="text-big">1. Identify All Volumes That Are Not in Pool <strong>FS5200pool0</strong> and Not in <strong>iogrp0-5200</strong></span></p>
+<ul>
+  <li>The volumes should be only for <strong>iogrp1-FS5200_</strong><i><strong>DR</strong> </i>but there may be cases where volumes were moved from system<i> </i><strong>FS5200</strong> to <strong>FS5200_DR</strong>.</li>
+</ul>
+<p><span class="text-big">2. Correct Outliers by Moving Volumes to Pool and Caching IO Group 0 for System <strong>FS5200</strong></span></p>
+<ul>
+  <li><code>svctask migratevdisk -copy 0 -mdiskgrp <i>FS5200pool0 </i>-vdisk <i>rhelsbx01_data04</i></code>
+    <ul>
+      <li>this command moves the entire volume to the targeted io group</li>
+      <li>* note: you can also use the vdisk_id instead of the vdisk name</li>
+      <li><code>lsvdiskextent <i>rhelsbx01_data4</i></code>
+        <ul>
+          <li>can use this command to display the progress of the migration process</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code>svctask addvdiskaccess -iogrp <i>io_grp0-FS5200 rhelsbx01_data4</i>&nbsp;</code>
+    <ul>
+      <li>this command adds host access for the migrated vdisk for io_group0-5200 on system FS5200</li>
+    </ul>
+  </li>
+</ul>
+<p><span class="text-big">3. Rescan Multipath on Host system</span></p>
+<p><i>* In this example we were running RHEL and used a script to scan for the new paths. We list the paths, rescan, then list them again to verify they were picked up.&nbsp;</i></p>
+<p>Verify current paths</p>
+<pre><code class="language-plaintext">multipath -ll</code></pre>
+<p>Example</p>
+<pre><code class="language-plaintext">[root@rhelsbx01 ~]# multipath -ll
+mpathr (3600507681281017df800000000006643) dm-5 IBM     ,2145
+size=32G features='1 queue_if_no_path' hwhandler='0' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 2:0:1:4 sdk 8:160  active ready running
+| `- 3:0:1:4 sdw 65:96  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 2:0:0:4 sde 8:64   active ready running
+  `- 3:0:0:4 sdq 65:0   active ready running</code></pre>
+<p>Pickup the new paths using this command:</p>
+<pre><code class="language-plaintext">rescan-scsi-bus -a</code></pre>
+<p>Verify new paths are discovered</p>
+<pre><code class="language-plaintext">multipath -ll</code></pre>
+<p>Example</p>
+<pre><code class="language-plaintext">[root@rhelsbx01 ~]# multipath -ll
+mpathr (3600507681281017df800000000006643) dm-5 IBM     ,2145
+size=32G features='1 queue_if_no_path' hwhandler='0' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:1:4 sdk  8:160  active ready running
+| `- 3:0:1:4 sdw  65:96  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 2:0:0:4 sde  8:64   active ready running
+  |- 3:0:0:4 sdq  65:0   active ready running
+  |- 2:0:2:4 sdac 65:192 active ready running
+  |- 2:0:3:4 sdai 66:32  active ready running
+  |- 3:0:2:4 sdao 66:128 active ready running
+  `- 3:0:3:4 sdau 66:224 active ready running</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">4. Transfer Host Workload to the System of the Migrated Volume&nbsp;</span></p>
+<ul>
+  <li><code>svctask movevdisk -iogrp <i>io_grp0-FS5200</i> <i>rhelsbx01_data4</i></code>
+    <ul>
+      <li>command moves host IO to vdisk now on system FS5200 which is the new IO group &amp; pool</li>
+    </ul>
+  </li>
+</ul>
+<p><span class="text-big">5. Disconnect Host Access/Pathing to the Original Volume that Was Migrated</span></p>
+<ul>
+  <li><code>svctask rmvdiskaccess -iogrp <i>io_grp1-FS5200_DR</i> <i>rhelsbx01_data04</i></code>
+    <ul>
+      <li>removes access to vdisk from current canister/node which would be <i><strong>iogrp1-FS200DR</strong></i></li>
+    </ul>
+  </li>
+</ul>
+<p><span class="text-big">6. Cleanup Disconnected Paths on Host</span></p>
+<p>remove faulty paths</p>
+<pre><code class="language-plaintext">./remove_flaulty_path.sh</code></pre>
+<p>Verify old paths are gone&nbsp;</p>
+<pre><code class="language-plaintext">multipath -ll</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">7. Verify All Volumes Were Migrated to <strong>FS5200</strong> System</span></p>
+<ul>
+  <li>ensure all volumes are pointing to correct pool(FS5200_pool0) and using correct io caching group (io_grp0-FS5200)</li>
+  <li>ensure all volumes are balanced amongst the 2 canisters in system FS5200</li>
+</ul>
+<p><span class="text-big">8. Remove all HA Volumes on <strong>FS5200_DR</strong> System</span></p>
+<p><span class="text-big">9. Change Cluster Topology from HA to Single Site</span></p>
+<p><span class="text-big">10. Remove Pool <strong>FS5200_DRpool0</strong> on FS5200_DR System</span></p>
+<p><span class="text-big">11. Remove assigned drives from <strong>io_grp1-FS5200_D</strong>R on FS5200_DR System</span></p>
+<p><span class="text-big">12. Remove IO Group <strong>iogroup1-FS5200DR </strong>on FS5200_DR System</span></p>
+<p><span class="text-big">13. Remove System FS5200_DR from Cluster</span></p>
+<p><strong>As superuser, ssh into service IP for node1 on system</strong></p>
+<p>Put both nodes into service mode:</p>
+<pre><code class="language-plaintext">sainfo lsservicenodes
+satask startservice -force &lt;node2_panel_name&gt;
+satask startservice -force &lt;node1_panel_name&gt;</code></pre>
+<p>Log back into node 1 service IP and issue the following (ensure both nodes are in service):</p>
+<pre><code class="language-plaintext">sainfo lsservicenodes
+satask leavecluster -force &lt;node2_panel_name&gt;
+satask leavecluster -force &lt;node1_panel_name&gt;</code></pre>
+<p><br>**** Note &nbsp;***<br>The previous steps will reset the superuser password back to factory defaults. &nbsp;Use **passw0rd** as the password going forward</p>
+<p>&nbsp;</p>
+<p>Log back into node 1 service IP and issue the following (ensure ‘cluster_id’, ‘cluster_name’, ‘node_name’ are blank):</p>
+<pre><code class="language-plaintext"> sainfo lsservicenodes 
+ satask chvpd -resetclusterid &lt;node2_panel_name&gt;
+ satask chvpd -resetclusterid &lt;node1_panel_name&gt;</code></pre>
+<p>Reboot the nodes:</p>
+<pre><code class="language-plaintext"> satask stopnode -reboot &lt;node2_panel_name&gt;
+ satask stopnode -reboot &lt;node1_panel_name&gt;</code></pre>
+<p>Log back into node 1 service IP and issue the following (both nodes should show 'node_status' as <u>Candidate</u> ):</p>
+<pre><code class="language-plaintext"> sainfo lsservicenodes </code></pre>
+<p>&nbsp;</p>
