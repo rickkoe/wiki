@@ -2,7 +2,7 @@
 title: FlashSystem IP Quorum
 description: 
 published: true
-date: 2025-01-14T19:37:44.711Z
+date: 2025-01-14T21:56:24.560Z
 tags: flashsystem, ha, quorum
 editor: markdown
 dateCreated: 2024-11-05T22:02:51.636Z
@@ -31,10 +31,8 @@ dnf install java
 -   Create a dedicated ipquorum user for starting the service
 
 ```plaintext
-sudo useradd -m ipquorum
 sudo groupadd ipquorum
-sudo usermod -a -G ipquorum ipquorum
-sudo passwd ipquorum
+sudo useradd -m -s /sbin/nologin -g ipquorum ipquorum
 ```
 
 -   Create required directories and set permissions for th log file
