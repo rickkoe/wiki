@@ -2,7 +2,7 @@
 title: FlashSystem IP Quorum
 description: 
 published: true
-date: 2025-01-14T17:36:53.197Z
+date: 2025-01-14T19:37:44.711Z
 tags: flashsystem, ha, quorum
 editor: markdown
 dateCreated: 2024-11-05T22:02:51.636Z
@@ -41,7 +41,7 @@ sudo passwd ipquorum
 
 ```plaintext
 sudo mkdir -p /opt/ibm/ip_quorum/log
-sudo chown ipquorum:ipquorum log
+sudo chown ipquorum:ipquorum /opt/ibm/ip_quorum/log
 ```
 
 -   Copy the ip*quorum.jar file to /opt/ibm/ip\_*quorum
