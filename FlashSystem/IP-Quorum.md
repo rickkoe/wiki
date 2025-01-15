@@ -2,7 +2,7 @@
 title: FlashSystem IP Quorum
 description: 
 published: true
-date: 2025-01-15T17:50:34.418Z
+date: 2025-01-15T17:50:58.254Z
 tags: flashsystem, ha, quorum
 editor: markdown
 dateCreated: 2024-11-05T22:02:51.636Z
@@ -77,19 +77,19 @@ WantedBy=multi-user.target
 -   Enable the service to start when the servier boots
 
 ```plaintext
-sudo systemctl enable ipquorum
+sudo systemctl enable fs5200_ipquorum
 ```
 
 -   Start the service
 
 ```plaintext
-sudo systemctl start ipquorum
+sudo systemctl start fs5200_ipquorum
 ```
 
 -   Verify the service is running
 
 ```plaintext
-sudo systemctl status ipquorum
+sudo systemctl status fs5200_ipquorum
 ```
 
 -   Status should  show active (running).
