@@ -2,7 +2,7 @@
 title: FlashSystem IP Quorum
 description: 
 published: true
-date: 2025-01-14T21:56:24.560Z
+date: 2025-01-15T17:50:34.418Z
 tags: flashsystem, ha, quorum
 editor: markdown
 dateCreated: 2024-11-05T22:02:51.636Z
@@ -35,11 +35,11 @@ sudo groupadd ipquorum
 sudo useradd -m -s /sbin/nologin -g ipquorum ipquorum
 ```
 
--   Create required directories and set permissions for th log file
+-   Create required directories and set permissions for the log file
 
 ```plaintext
-sudo mkdir -p /opt/ibm/ip_quorum/log
-sudo chown ipquorum:ipquorum /opt/ibm/ip_quorum/log
+sudo mkdir -p /opt/ibm/fs5200_ip_quorum/log
+sudo chown ipquorum:ipquorum /opt/ibm/fs5200_ip_quorum/log
 ```
 
 -   Copy the ip*quorum.jar file to /opt/ibm/ip\_*quorum
@@ -51,7 +51,7 @@ scp ipquorum.jar root@ibmdev01.esilabs.com:/opt/ibm/ip_quorum
 -   Create the ipquorum.service file and open in vi
 
 ```plaintext
-sudo vi /etc/systemd/system/ipquorum.service
+sudo vi /etc/systemd/system/fs5200_ipquorum.service
 ```
 
 -   Add the following contents to the file in vi
