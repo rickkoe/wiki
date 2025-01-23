@@ -7,7 +7,7 @@
 
 == CutOver(When ready to migrate):
 1.	On Server Properties add "csm.server.startmm_in_gcmode=false".   This property will prevent CSM from attempting to start the new MT MM-GM pairs in GC mode first.
-2.	Uncheck the "Manage H1-H2 with HyperSwap" on the existing MGM session.  This will purge the HyperSwap configuration so that the new session can load it.
+2.	Uncheck the "Manage H1-H2 with HyperSwap" on the existing MGM session.  This will purge the HyperSwap configuration so that the new session can load it. Do this action for both MM and MGM session if they both exist and tied together. 
 3.	Issue Start H1->H2->H3 command on the new MT MM-GM session IMPORTANT:  Make sure you issue the cascaded h1h2h3 command.  The MT h1h2 h1h3 command will show up on the start. 
 4.	Wait until session assimilates all the existing pairs and then loads the HyperSwap configuration.
 5.	Delete the existing MGM session from the GUI.  This removes the brains from CSM without touching the hardware.
