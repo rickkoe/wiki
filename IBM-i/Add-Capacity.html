@@ -2,7 +2,7 @@
 title: Add Capacity to an IBM i LPAR
 description: 
 published: true
-date: 2025-01-24T19:20:44.680Z
+date: 2025-01-24T22:33:57.279Z
 tags: ibm, ibmi
 editor: ckeditor
 dateCreated: 2025-01-24T15:16:38.705Z
@@ -16,5 +16,9 @@ dateCreated: 2025-01-24T15:16:38.705Z
   <li>Add volumes to the ASP</li>
   <li>Start balance</li>
 </ol>
-<p>&nbsp;</p>
+<pre><code class="language-plaintext">STRASPBAL</code></pre>
+<pre><code class="language-plaintext">Balance type = *CAPACITY
+ASP number = *ALL
+Time limit = *NOMAX
+Balance Priority = *MEDIUM</code></pre>
 <p>WRKSYSSTS</p>
