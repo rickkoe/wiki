@@ -2,7 +2,7 @@
 title: IBMi End Allocation Command
 description: 
 published: true
-date: 2022-05-14T15:37:52.981Z
+date: 2025-01-24T22:02:36.222Z
 tags: script, ibmi
 editor: markdown
 dateCreated: 2022-05-14T15:19:27.631Z
@@ -10,6 +10,9 @@ dateCreated: 2022-05-14T15:19:27.631Z
 
 # Objective
 When ending allocation on units in an IBMi ASP, you have to type each unit number in a list.  When dealing with a large number of units that are in a consecutive range, you can use the python script below to create a command to end allocation on IBMi.
+
+# Prerequisite
+Install Python
 
 # Syntax
 ```python
