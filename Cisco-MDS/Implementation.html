@@ -2,304 +2,242 @@
 title: Cisco MDS Implementation
 description: 
 published: true
-date: 2025-01-28T17:26:22.974Z
+date: 2025-01-28T17:30:35.529Z
 tags: san, fibre channel, cisco, mds
 editor: ckeditor
 dateCreated: 2022-02-07T21:38:50.475Z
 -->
 
-<h1 class="toc-header"> Implementation</h1>
+<h1>Implementation</h1>
 <ul>
-<li><a class="is-internal-link is-valid-page" href="/cisco-mds/mds-tech-support">Procedure to collect show tech-support logs</a></li>
+  <li><a href="/cisco-mds/mds-tech-support">Procedure to collect show tech-support logs</a></li>
 </ul>
-<h2 class="toc-header" id="mds-cheat-sheet"> MDS Cheat Sheet</h2>
+<h2>MDS Cheat Sheet</h2>
 <p>Enter configuration mode:</p>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">config t
-</code></pre>
+<pre><code class="language-plaintext">config t</code></pre>
 <p>Rename a device-alias:</p>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">device-alias database
+<pre><code class="language-plaintext">device-alias database
 device-alias rename {old_name} {new_name}
-device-alias commit
-</code></pre>
+device-alias commit</code></pre>
 <p>Save configuration changes</p>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">copy run start
-</code></pre>
+<pre><code class="language-plaintext">copy run start</code></pre>
 <p>Displaying power usage information</p>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">show environment power
-</code></pre>
+<pre><code class="language-plaintext">show environment power</code></pre>
 <p>Configuring the Power Supply Mode</p>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">configure terminal
+<pre><code class="language-plaintext">configure terminal
 power redundancy-mode {combined | insrc-redundant | ps-redundant |redundant}
 (Optional) show environment power
-(Optional) copy running-config startup-config
-</code></pre>
-<p>Power Cycling Modules<br>
-Step 1	<br>
-Identify the module that needs to be reset.</p>
-<p>Step 2	<br>
-Issue the reload module command to reset the identified module. This command power cycles the selected module.<br>
-Caution 	<br>
-Reloading a module disrupts traffic through the module.</p>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">reload module 2
-</code></pre>
-<h2 class="toc-header" id="implementation-checklist"> Implementation Checklist</h2>
-<ul>
-<li><input type="checkbox"> Enter configuration mode</li>
+(Optional) copy running-config startup-config</code></pre>
+<p>Power Cycling Modules<br>Step 1&nbsp;<br>Identify the module that needs to be reset.</p>
+<p>Step 2&nbsp;<br>Issue the reload module command to reset the identified module. This command power cycles the selected module.<br>Caution&nbsp;<br>Reloading a module disrupts traffic through the module.</p>
+<pre><code class="language-plaintext">reload module 2</code></pre>
+<h2>Implementation Checklist</h2>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enter configuration mode</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">    config 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Set password to pre-defined secure password</li>
+<pre><code class="language-plaintext">config t</code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set password to pre-defined secure password</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> username admin password &lt;new password&gt;   
-</code></pre>
-<ul>
-<li><input type="checkbox"> Set the switch name</li>
+<pre><code class="language-plaintext">username admin password &lt;new password&gt;   </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set the switch name</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> switchname &lt;switch name&gt; 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Set IP address and subnet mask</li>
+<pre><code class="language-plaintext">switchname &lt;switch name&gt; </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set IP address and subnet mask</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> int mgmt 0 ; ip address 10.0.0.10 255.255.255.0 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Set default gateway</li>
+<pre><code class="language-plaintext">int mgmt 0 ; ip address 10.0.0.10 255.255.255.0 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set default gateway</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> ip default-gateway 10.0.0.1
-</code></pre>
-<ul>
-<li><input type="checkbox"> Enable SSH</li>
+<pre><code class="language-plaintext">ip default-gateway 10.0.0.1</code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable SSH</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> ssh key rsa 1024 force ; feature ssh 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Disable Telnet</li>
+<pre><code class="language-plaintext">ssh key rsa 1024 force ; feature ssh </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Disable Telnet</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> no feature telnet 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Enable http-server</li>
+<pre><code class="language-plaintext">no feature telnet </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable http-server</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> feature http-server 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure timezone</li>
+<pre><code class="language-plaintext">feature http-server </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure timezone</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> clock timezone CST -6 0 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure clock</li>
+<pre><code class="language-plaintext">clock timezone CST -6 0 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure clock</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> clock set 15:30:00 29 September 2020 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure summertime</li>
+<pre><code class="language-plaintext">clock set 15:30:00 29 September 2020 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure summertime</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> clock summer-time CDT 2 Sunday March 02:00 1 Sunday November 02:00 60 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Enable NPIV feature</li>
+<pre><code class="language-plaintext">clock summer-time CDT 2 Sunday March 02:00 1 Sunday November 02:00 60 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable NPIV feature</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> feature npiv 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure NTP server</li>
+<pre><code class="language-plaintext">feature npiv </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure NTP server</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> ntp server ntp.server.com 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure default switchport interface state</li>
+<pre><code class="language-plaintext">ntp server ntp.server.com </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default switchport interface state</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> system default switchport shutdown 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure default switchport trunk mode</li>
+<pre><code class="language-plaintext">system default switchport shutdown </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default switchport trunk mode</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> system default switchport trunk mode on 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure switchport mode</li>
+<pre><code class="language-plaintext">system default switchport trunk mode on </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure switchport mode</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> interface fc1/1-96 ; switchport mode auto ; exit 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure default zone policy</li>
+<pre><code class="language-plaintext">interface fc1/1-96 ; switchport mode auto ; exit </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default zone policy</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> no system default zone default-zone permit 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Enable full zoneset distribution</li>
+<pre><code class="language-plaintext">no system default zone default-zone permit </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable full zoneset distribution</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> system default zone distribute full 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Create VSAN(s)</li>
+<pre><code class="language-plaintext">system default zone distribute full </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Create VSAN(s)</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> vsan database ; vsan 10 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Name VSAN</li>
+<pre><code class="language-plaintext">vsan database ; vsan 10 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Name VSAN</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> vsan 10 name fabricA 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Assign ports to VSAN(s)</li>
+<pre><code class="language-plaintext">vsan 10 name fabricA </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Assign ports to VSAN(s)</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> vsan database ; vsan 10 interface fc1/1-96 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure default zone mode (basic/enhanced)</li>
+<pre><code class="language-plaintext">vsan database ; vsan 10 interface fc1/1-96 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure default zone mode (basic/enhanced)</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> zone mode enhanced vsan 10 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure zoning confirm-commit</li>
+<pre><code class="language-plaintext">zone mode enhanced vsan 10 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure zoning confirm-commit</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> zone confirm-commit enable vsan 10 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Enable smart zoning</li>
+<pre><code class="language-plaintext">zone confirm-commit enable vsan 10 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable smart zoning</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> zone smart-zoning enable vsan 10 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure device-alias mode (basic/enhanced)</li>
+<pre><code class="language-plaintext"> zone smart-zoning enable vsan 10 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure device-alias mode (basic/enhanced)</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> device-alias mode enhanced 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure device-alias confirm-commit</li>
+<pre><code class="language-plaintext">device-alias mode enhanced </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure device-alias confirm-commit</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> device-alias confirm-commit enable 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure domain name</li>
+<pre><code class="language-plaintext">device-alias confirm-commit enable </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure domain name</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> ip domain-name lookup ; ip domain-name demo.com 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure DNS</li>
+<pre><code class="language-plaintext">ip domain-name lookup ; ip domain-name demo.com </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure DNS</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> ip name-server 1.1.1.1 2.2.2.2 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Verify licenses (POD, etc)</li>
+<pre><code class="language-plaintext">ip name-server 1.1.1.1 2.2.2.2 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Verify licenses (POD, etc)</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">     
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure zoning</li>
+<pre><code class="language-plaintext">     </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure zoning</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> !Full Zone Database Section for vsan 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Import fcaliases to device-alias</li>
+<pre><code class="language-plaintext">! Full Zone Database Section for vsan </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Import fcaliases to device-alias</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> device-alias import fcalias vsan 10 ; device-alias commit 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Update NX-OS</li>
+<pre><code class="language-plaintext">device-alias import fcalias vsan 10 ; device-alias commit </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Update NX-OS</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">     
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure static domain-id</li>
+<pre><code class="language-plaintext">     </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure static domain-id</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> fcdomain domain 11 static vsan 10 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure contact name</li>
+<pre><code class="language-plaintext">fcdomain domain 11 static vsan 10 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure contact name</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> snmp-server contact John Doe 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure contact email address</li>
+<pre><code class="language-plaintext">snmp-server contact John Doe </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure contact email address</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; email-contact johndoe@demo.com 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure contact phone</li>
+<pre><code class="language-plaintext">callhome ; email-contact johndoe@demo.com </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure contact phone</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; phone-contact +1-123-456-7890 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure contact street address</li>
+<pre><code class="language-plaintext">callhome ; phone-contact +1-123-456-7890 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure contact street address</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; streetaddress 123 North Street, DemoVille, MN 55555 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Configure site-id</li>
+<pre><code class="language-plaintext">callhome ; streetaddress 123 North Street, DemoVille, MN 55555 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Configure site-id</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; site-id Site1 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Call home distribute</li>
+<pre><code class="language-plaintext">callhome ; site-id Site1 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Call home distribute</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; distribute 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Call home destination profile</li>
+<pre><code class="language-plaintext">callhome ; distribute </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Call home destination profile</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; destination-profile full-txt-destination email-addr DemoTeam@demo.com 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Email From</li>
+<pre><code class="language-plaintext">callhome ; destination-profile full-txt-destination email-addr DemoTeam@demo.com </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Email From</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; transport email from DemoTeam@demo.com 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Email Reply To</li>
+<pre><code class="language-plaintext">callhome ; transport email from DemoTeam@demo.com </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Email Reply To</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; transport email reply-to switch1@demo.com 
-</code></pre>
-<ul>
-<li><input type="checkbox"> SMTP Server</li>
+<pre><code class="language-plaintext">callhome ; transport email reply-to switch1@demo.com </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">SMTP Server</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; transport email smtp-server smtprelay.demo.com port 25 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Enable call home</li>
+<pre><code class="language-plaintext">callhome ; transport email smtp-server smtprelay.demo.com port 25 </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable call home</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; enable 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Commit call home</li>
+<pre><code class="language-plaintext">callhome ; enable </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Commit call home</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> callhome ; commit 
-</code></pre>
-<ul>
-<li><input type="checkbox"> Label the switch ports</li>
+<pre><code class="language-plaintext">callhome ; commit </code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Label the switch ports</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">interface fc1/1
-switchport description &lt;port label&gt;
-</code></pre>
-<ul>
-<li><input type="checkbox"> Copy run start</li>
+<pre><code class="language-plaintext">interface fc1/1
+switchport description &lt;port label&gt;</code></pre>
+<ul class="todo-list">
+  <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Copy run start</span></label></li>
 </ul>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-"> copy run start 
-</code></pre>
-<h2 class="toc-header" id="port-channel-configuration"> Port Channel Configuration</h2>
-<blockquote class="is-info">
-<p>Ensure one or more ISL exists between the two switches.  Make sure they come up as “TE” ports with the correct VSANs.  ISLs can be in VSAN 1 or just in the VSAN that needs to be extended between two switches.</p>
+<pre><code class="language-plaintext">copy run start </code></pre>
+<h2>Port Channel Configuration</h2>
+<blockquote>
+  <p>Ensure one or more ISL exists between the two switches. Make sure they come up as “TE” ports with the correct VSANs. ISLs can be in VSAN 1 or just in the VSAN that needs to be extended between two switches.</p>
 </blockquote>
-<h3 class="toc-header" id="create-a-port-channel"> Create a Port Channel</h3>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">interface port-channel 3
-channel mode active
-</code></pre>
-<h3 class="toc-header" id="add-ports-to-a-port-channel"> Add Ports to a Port Channel</h3>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">interface fc1/1-2
-channel-group 3 force
-</code></pre>
-<h3 class="toc-header" id="activate-a-port-channel"> Activate a Port Channel</h3>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">interface port-channel 3
-no shut
-</code></pre>
-<h3 class="toc-header" id="delete-a-port-channel"> Delete a Port channel</h3>
-<pre class="prismjs line-numbers" v-pre="true"><code class="language-">no interface port-channel 3
-</code></pre>
-<h1 class="toc-header" id="misc-information"> Misc Information</h1>
-<h2 class="toc-header" id="power-supply-modes"> Power Supply Modes</h2>
+<h3>Create a Port Channel</h3>
+<pre><code class="language-plaintext">interface port-channel 3
+channel mode active</code></pre>
+<h3>Add Ports to a Port Channel</h3>
+<pre><code class="language-plaintext">interface fc1/1-2
+channel-group 3 force</code></pre>
+<h3>Activate a Port Channel</h3>
+<pre><code class="language-plaintext">interface port-channel 3
+no shut</code></pre>
+<h3>Delete a Port channel</h3>
+<pre><code class="language-plaintext">no interface port-channel 3</code></pre>
+<h1>Misc Information</h1>
+<h2>Power Supply Modes</h2>
 <p>Cisco MDS 9000 Series Multilayer Switches support different number and capabilities of power supplies. This section describes the power modes that are available on Cisco MDS 9000 Series Multilayer Switches.</p>
 <p>Cisco MDS 9710 Multilayer Switches can support up to four power supplies when they have only Cisco MDS 9700 48-Port 32-Gbps Fibre Channel Switching Modules installed on them. By default, the four power supplies are installed in the power supply bays 1 to 4.</p>
 <p>You can configure one of the following power modes to use the combined power provided by the installed power supply units (no power redundancy) or to provide power redundancy when there is power loss. We recommend that you configure the full redundancy power mode on your switch for optimal performance.</p>
@@ -308,7 +246,3 @@ no shut
 <p><strong>Power-supply (N+1) redundancy mode</strong>—This mode allocates one power supply as reserve to provide power to the switch in case an active power supply fails. The remaining power supplies are allocated for the available category. The reserve power supply must be at least as powerful as each of the power supplies used for the active power.</p>
 <p><strong>Full-redundancy mode</strong>—This mode is a combination of input-source (grid) and power-supply (N+1) redundancy modes. Similar to the input-source redundancy mode, this mode allocates half of the power supplies to the available category and the remaining power supplies to reserve category. One of the reserve power supplies can alternatively be used to provide power if a power supply used for the active power fails.</p>
 <p>For more information on the power supply modes supported on your switch, see the Hardware Installation Guide corresponding to your switch.</p>
-<h1 class="toc-header"> Links</h1>
-<ul class="links-list">
-<li><a rel="noreferrer" target="_blank" class="is-external-link" href="https://www.cisco.com/c/en/us/td/docs/switches/datacenter/mds9000/sw/b_MDS_NX-OS_Recommended_Releases.html">Recommended Releases for Cisco MDS 9000 Series Switches</a></li>
-</ul>
