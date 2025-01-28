@@ -2,7 +2,7 @@
 title: Cisco MDS Implementation
 description: 
 published: true
-date: 2025-01-28T17:30:35.529Z
+date: 2025-01-28T17:32:49.479Z
 tags: san, fibre channel, cisco, mds
 editor: ckeditor
 dateCreated: 2022-02-07T21:38:50.475Z
@@ -36,6 +36,7 @@ power redundancy-mode {combined | insrc-redundant | ps-redundant |redundant}
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enter configuration mode</span></label></li>
 </ul>
 <pre><code class="language-plaintext">config t</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set password to pre-defined secure password</span></label></li>
 </ul>
@@ -52,6 +53,7 @@ power redundancy-mode {combined | insrc-redundant | ps-redundant |redundant}
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Set default gateway</span></label></li>
 </ul>
 <pre><code class="language-plaintext">ip default-gateway 10.0.0.1</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Enable SSH</span></label></li>
 </ul>
@@ -217,6 +219,7 @@ power redundancy-mode {combined | insrc-redundant | ps-redundant |redundant}
 </ul>
 <pre><code class="language-plaintext">interface fc1/1
 switchport description &lt;port label&gt;</code></pre>
+<p>&nbsp;</p>
 <ul class="todo-list">
   <li><label class="todo-list__label"><input type="checkbox" disabled="disabled"><span class="todo-list__label__description">Copy run start</span></label></li>
 </ul>
@@ -236,13 +239,3 @@ channel-group 3 force</code></pre>
 no shut</code></pre>
 <h3>Delete a Port channel</h3>
 <pre><code class="language-plaintext">no interface port-channel 3</code></pre>
-<h1>Misc Information</h1>
-<h2>Power Supply Modes</h2>
-<p>Cisco MDS 9000 Series Multilayer Switches support different number and capabilities of power supplies. This section describes the power modes that are available on Cisco MDS 9000 Series Multilayer Switches.</p>
-<p>Cisco MDS 9710 Multilayer Switches can support up to four power supplies when they have only Cisco MDS 9700 48-Port 32-Gbps Fibre Channel Switching Modules installed on them. By default, the four power supplies are installed in the power supply bays 1 to 4.</p>
-<p>You can configure one of the following power modes to use the combined power provided by the installed power supply units (no power redundancy) or to provide power redundancy when there is power loss. We recommend that you configure the full redundancy power mode on your switch for optimal performance.</p>
-<p><strong>Combined mode</strong>—This mode uses the combined capacity of all the power supplies. In case of power supply failure, the entire switch can be shut down (depending on the power used) causing traffic disruption. This mode is seldom used, except in cases when the switch requires more power.</p>
-<p><strong>Input Source (grid) redundancy mode</strong>—This mode allocates half of the power supplies to the available category and the other half to the reserve category. You must use different power supplies for the available and reserve categories so that if the power supplies used for the active power fails, the power supplies used for the reserve power can provide power to the switch. If the grid-redundancy mode is lost, the power mode reverts to combined mode.</p>
-<p><strong>Power-supply (N+1) redundancy mode</strong>—This mode allocates one power supply as reserve to provide power to the switch in case an active power supply fails. The remaining power supplies are allocated for the available category. The reserve power supply must be at least as powerful as each of the power supplies used for the active power.</p>
-<p><strong>Full-redundancy mode</strong>—This mode is a combination of input-source (grid) and power-supply (N+1) redundancy modes. Similar to the input-source redundancy mode, this mode allocates half of the power supplies to the available category and the remaining power supplies to reserve category. One of the reserve power supplies can alternatively be used to provide power if a power supply used for the active power fails.</p>
-<p>For more information on the power supply modes supported on your switch, see the Hardware Installation Guide corresponding to your switch.</p>
