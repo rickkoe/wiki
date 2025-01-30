@@ -2,13 +2,11 @@
 title: Evolving Solutions Technology Wiki
 description: Your Central Hub for IT Infrastructure, Storage, and Networking Knowledge
 published: true
-date: 2025-01-30T15:42:20.553Z
+date: 2025-01-30T15:42:46.791Z
 tags: public
 editor: markdown
 dateCreated: 2022-02-04T22:11:20.245Z
 ---
-
-  Evolving Solutions Technology Wiki body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f4f4f4; color: #333; } .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); } h1, h2, h3 { color: #0056b3; } .section { margin-bottom: 20px; } .quick-links, .recent-updates, .featured-topics, .external-links { list-style: none; padding: 0; } .quick-links li, .recent-updates li, .featured-topics li, .external-links li { padding: 8px; background: #e9f5ff; margin: 5px 0; border-left: 4px solid #0056b3; } a { text-decoration: none; color: #0073e6; } a:hover { text-decoration: underline; }
 
 # 🔍 Getting Started
 
