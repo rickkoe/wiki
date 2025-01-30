@@ -2,7 +2,7 @@
 title: Evolving Solutions Technology Wiki
 description: 
 published: true
-date: 2025-01-30T15:39:23.098Z
+date: 2025-01-30T15:39:40.996Z
 tags: public
 editor: markdown
 dateCreated: 2022-02-04T22:11:20.245Z
@@ -12,7 +12,7 @@ dateCreated: 2022-02-04T22:11:20.245Z
 
 # Evolving Solutions Technology Wiki
 
-*Your Central Hub for IT Infrastructure, Storage, and Networking Knowledge*
+
 
 ## 🔍 Getting Started
 
