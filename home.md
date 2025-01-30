@@ -2,7 +2,7 @@
 title: Evolving Solutions Technology Wiki
 description: Your Central Hub for IT Infrastructure, Storage, and Networking Knowledge
 published: true
-date: 2025-01-30T15:42:46.791Z
+date: 2025-01-30T15:51:48.261Z
 tags: public
 editor: markdown
 dateCreated: 2022-02-04T22:11:20.245Z
@@ -10,9 +10,7 @@ dateCreated: 2022-02-04T22:11:20.245Z
 
 # 🔍 Getting Started
 
--   [How to Use This Wiki](#) – Learn how to navigate, search, and contribute.
--   [Key Topics & Categories](#) – Overview of the major sections covered.
--   [Search the Wiki](#) – Find exactly what you need.
+-   [Finding-Information](/Wiki/Finding-Information)
 
 # 🚀 Quick Links
 
