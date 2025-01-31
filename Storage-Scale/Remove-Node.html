@@ -2,7 +2,7 @@
 title: Removing a Node from Storage Scale
 description: 
 published: true
-date: 2025-01-31T21:12:01.736Z
+date: 2025-01-31T21:22:42.247Z
 tags: 
 editor: ckeditor
 dateCreated: 2025-01-31T21:03:59.752Z
@@ -15,3 +15,27 @@ dateCreated: 2025-01-31T21:03:59.752Z
 <p>mmshutdown -N rocket</p>
 <p>mmdelnode -N rocket</p>
 <p>./spectrumscale node delete rocket.esilabs.com</p>
+<p>&nbsp;</p>
+<h1>Deleting a Cluster Export Services node from an IBM Storage Scale cluster</h1>
+<p>Use this information to delete a Cluster Export Services (CES) node from an IBM Storage Scale cluster.</p>
+<ol>
+  <li>On a node other than the one you want to delete from the cluster, issue the following command to suspend the node:</li>
+</ol>
+<pre><code class="language-plaintext"># mmces node suspend –N &lt;Node_to_Delete&gt;</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;2. On the node that you want to delete from the cluster, issue the following commands to stop the CES services:</p>
+<pre><code class="language-plaintext"># mmces service stop nfs
+# mmces service stop smb
+# mmces service stop s3</code></pre>
+<p>&nbsp;</p>
+<p>In this example, it is assumed that all three protocols are enabled on the node that you want to delete from the cluster.</p>
+<p>&nbsp;3. On a node other than the one you want to delete from the cluster, issue the following command to disable CES on the node:</p>
+<pre><code class="language-plaintext"># mmchnode –N &lt;Node_to_Delete&gt; --ces-disable</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;4. On a node other than the one you want to delete from the cluster, issue the following command to shut down GPFS on the node:</p>
+<pre><code class="language-plaintext"># mmshutdown –N &lt;Node_to_Delete&gt;</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;5. On a node other than the one you want to delete from the cluster, issue the following command to delete the node from the cluster:</p>
+<pre><code class="language-plaintext"># mmdelnode –N &lt;Node_to_Delete&gt;</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;6. If you disabled file audit logging in step 1, you can enable it by following the instructions in <a href="https://www.ibm.com/docs/en/STXKQY_5.2.1/com.ibm.spectrum.scale.v5r10.doc/bl1adm_adlgenabling.html#adlgenabling">Enabling file audit logging on a file system</a>.</p>
