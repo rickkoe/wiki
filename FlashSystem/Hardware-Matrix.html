@@ -1,0 +1,184 @@
+<!--
+title: FlashSystem Hardware Matrix
+description: Cheatsheet for IBM FlashSystem Storage Models
+published: true
+date: 2025-02-07T04:46:12.150Z
+tags: ibm, flashsystem
+editor: ckeditor
+dateCreated: 2025-02-07T04:46:12.150Z
+-->
+
+<p>For more information, see: &nbsp;<a href="https://evolvingsolutions.sharepoint.com/:x:/r/sites/technology/Shared%20Documents/Brocade/Brocade_IBM_SANSalesReferenceManual_SSRM_2024-12-01.XLSX?d=wd12686acb5b34dee9376d801ec82b41f&amp;csf=1&amp;web=1&amp;e=ErTjkh">Brocade IBM SAN Sales Reference Manual</a><br><i>This workbook is IBM specific, but contains extensive information about each of products below. &nbsp;USE IT!!!</i></p>
+<h1>Directors</h1>
+<figure class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Type</th>
+        <th>Gen</th>
+        <th>FC Speed</th>
+        <th>FICON</th>
+        <th>Max Ports</th>
+        <th>&nbsp;Rack Units</th>
+        <th>Install Guide&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/directors/x7-directors">X7-8</a></th>
+        <td>Director</td>
+        <td>7</td>
+        <td>64 Gbps</td>
+        <td>Yes</td>
+        <td>512</td>
+        <td>&nbsp;14 RU</td>
+        <td>&nbsp;X7-8 Install Guide</td>
+      </tr>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/directors/x7-directors">X7-4</a></th>
+        <td>Director</td>
+        <td>7</td>
+        <td>64 Gbps</td>
+        <td>Yes</td>
+        <td>256</td>
+        <td>
+          <p>&nbsp;8 RU +</p>
+          <p>1 RU shelf</p>
+        </td>
+        <td>&nbsp;X7-4 Install Guide</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h1>Switches</h1>
+<figure class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Type</th>
+        <th>Gen</th>
+        <th>FC Speed</th>
+        <th>FICON</th>
+        <th>Base Ports</th>
+        <th>POD Increments</th>
+        <th>Max Ports</th>
+        <th>&nbsp;Rack Units</th>
+        <th>Install Guide&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/switches/g730-switch">G730</a></th>
+        <td>Switch</td>
+        <td>7</td>
+        <td>64 Gbps</td>
+        <td>No</td>
+        <td>&nbsp;48</td>
+        <td>48, 72, 80, 96, 104, 128</td>
+        <td>128</td>
+        <td>&nbsp;2 RU</td>
+        <td><a href="https://techdocs.broadcom.com/us/en/fibre-channel-networking/switches/g730-switch/1-0.html">G730 Install Guide</a></td>
+      </tr>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/switches/g630-switch">G630</a></th>
+        <td>Switch</td>
+        <td>6</td>
+        <td>32 Gbps</td>
+        <td>No</td>
+        <td>&nbsp;48</td>
+        <td>48, 72, 96, 128&nbsp;</td>
+        <td>128</td>
+        <td>&nbsp;2 RU</td>
+        <td><a href="https://techdocs.broadcom.com/us/en/fibre-channel-networking/switches/g630-switch/1-0.html">G630 Install Guide</a></td>
+      </tr>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/switches/g720-switch">G720</a></th>
+        <td>Switch</td>
+        <td>7</td>
+        <td>64 Gbps</td>
+        <td>Yes</td>
+        <td>&nbsp;24</td>
+        <td>24, 32, 40, 48, 56, 64</td>
+        <td>64</td>
+        <td>&nbsp;1 RU</td>
+        <td><a href="https://techdocs.broadcom.com/us/en/fibre-channel-networking/switches/g720-switch/1-0.html">G720 Install Guide</a></td>
+      </tr>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/switches/g610-switch">G610</a></th>
+        <td>Switch</td>
+        <td>6</td>
+        <td>32 Gbps</td>
+        <td>No</td>
+        <td>&nbsp;8</td>
+        <td>8, 16, 24</td>
+        <td>24</td>
+        <td>&nbsp;1 RU</td>
+        <td><a href="https://techdocs.broadcom.com/us/en/fibre-channel-networking/switches/g610-switch/1-0.html">G610 Install Guide</a></td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h1>FCIP Routers</h1>
+<figure class="table">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Type</th>
+        <th>Gen</th>
+        <th>FC Speed</th>
+        <th>FICON</th>
+        <th>Base Ports</th>
+        <th>POD Increments</th>
+        <th>Max Ports</th>
+        <th>&nbsp;Rack Units</th>
+        <th>&nbsp;</th>
+        <th>Install Guide&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/extension/7850-extension-switch">7850</a></th>
+        <td>FCIP</td>
+        <td>7</td>
+        <td>64 Gbps</td>
+        <td>&nbsp;No</td>
+        <td>
+          <p>24 x FC</p>
+          <p>16 x 25/10/1 GbE FCIP</p>
+          <p>2 x 100 GbE FCIP</p>
+        </td>
+        <td>
+          <p>All ports are enabled by default</p>
+          <p>No POD license needed</p>
+        </td>
+        <td>
+          <p>24 x FC</p>
+          <p>16 x 25/10/1 GbE FCIP</p>
+          <p>2 x 100 GbE FCIP</p>
+        </td>
+        <td>&nbsp;1 RU</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;7850 Install Guide</td>
+      </tr>
+      <tr>
+        <th><a href="https://www.broadcom.com/products/fibre-channel-networking/extension/7810-extension-switch">7810</a></th>
+        <td>FCIP</td>
+        <td>6</td>
+        <td>32 Gbps</td>
+        <td>&nbsp;No</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>
+          <p>12 x FC</p>
+          <p>6 x 1/10 GbE FCIP</p>
+        </td>
+        <td>&nbsp;1 RU</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;7810 Install Guide</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
