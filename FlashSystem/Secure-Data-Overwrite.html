@@ -2,12 +2,41 @@
 title: Decomissioning and Wiping a FlashSystem
 description: Erasing a FlashSystem to resell or retire
 published: true
-date: 2025-02-18T17:20:11.633Z
+date: 2025-02-18T17:24:43.516Z
 tags: 
 editor: ckeditor
 dateCreated: 2025-02-18T17:20:11.633Z
 -->
 
+<h1>Official Documentation</h1>
 <ul>
   <li><a href="https://www.ibm.com/docs/en/flashsystem-9x00/8.6.0?topic=service-returning-equipment">Returning Equipment to IBM</a></li>
 </ul>
+<h1>Secure data deletion</h1>
+<p>The system provides methods to securely erase data from a drive or from a boot drive when a control enclosure is decommissioned. Secure data deletion erases or overwrites all traces of existing data from a data storage device. The original data on that device becomes inaccessible and cannot be reconstructed. You can securely delete data on individual drives and on a boot drive of a control enclosure. The methods and commands that are used to securely delete data enable the system to be used in compliance with European Regulation EU2019/424.</p>
+<p>For secure deletion, follow the steps.</p>
+<ul>
+  <li>Secure erase NVMe drive.</li>
+  <li>Secure erase Boot drive.</li>
+</ul>
+<p>Secure erase NVMe drive.</p>
+<p>Following GUI procedure</p>
+<ol>
+  <li>Click <strong>Pools</strong>&gt;<strong> Internal Storage</strong></li>
+  <li>Select the drives &gt;<strong> Mark as</strong>&gt;<strong> Unused</strong> wait until the status of all drives change to unused</li>
+  <li>Select the drives again and mark them as candidate, it performs the secure erase <strong>Mark as</strong>&gt;<strong> Candidate</strong></li>
+</ol>
+<p>Following command-line procedure</p>
+<p>You can use the command <code><strong>chdrive -task erase</strong> <i>drive_id</i> </code>to delete data from an NVM Express (NVMe) drive</p>
+<p>The drive is marked as <strong>offline</strong> and the deletion process starts.</p>
+<p>To see the status of the data deletion task and the estimated completion time, you can use the <strong>lsdriveprogress</strong> command.</p>
+<p>When you use <code><strong>chdrive -task format</strong> <i>drive_id</i></code>, the system changes the internal key in the NVMe drive and then erases the user data. All previous data in the drive becomes unreadable.</p>
+<p>Before an NVMe drive is added to an encryption pool, the drive is encrypted with a new key. Because that encryption key is removed during the formatting process, the data on the NVMe drive can no longer be used or read.</p>
+<p>Secure erase Boot drive.</p>
+<p>You can also securely delete the data on a boot drive of a control enclosure.</p>
+<p><strong>Note:</strong> To complete these steps make sure, you are logged in to the service GUI/CLI and not the config node.</p>
+<ol>
+  <li>Ensure that the node or canister is in Candidate state without a cluster ID by running. Use command <code><strong>satask leavecluster</strong></code></li>
+  <li>Run the command <code><strong>satask rescuenode -secureerase -force</strong></code></li>
+</ol>
+<p>The system then uses the block erase method to delete most of the vital product data (VPD) from the boot drive. Only the serial number, FRU part number, and MTM information remain in the VPD.</p>
