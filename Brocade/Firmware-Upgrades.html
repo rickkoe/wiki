@@ -1,0 +1,45 @@
+<!--
+title: Brocade Firmware Upgrades
+description: 
+published: true
+date: 2025-03-06T00:02:33.774Z
+tags: brocade, firmware
+editor: ckeditor
+dateCreated: 2024-11-08T02:55:09.132Z
+-->
+
+<h1>Firmware Upgrades</h1>
+<h2>Using SCP/SFTP Server</h2>
+<ol>
+  <li>Have a SCP/SFTP server available</li>
+  <li>Download the code from the appropriate support vendor (Brocade, IBM, etc.)</li>
+  <li>Extract the .zip file and place in FTP server directory</li>
+  <li>Download the TrueFOS License from the appropriate support vendor</li>
+  <li>Copy the TrueFOS License to the FTP server and install with a command like this<br><code>license --install -h 10.10.10.10 -t scp -u admin -f /home/admin/licenses/1729215840332_LID_10_00_D8_33_24_18_92.xml</code></li>
+  <li>Once the license is installed, start the code upgrade with the following command:<br><code>firmwaredownload</code></li>
+  <li>Follow the promps on firmwaredownload to enter:<ol>
+      <li>Server Name or IP Address</li>
+      <li>User Name</li>
+      <li>File Name</li>
+      <li>Network Protocol(1-SCP, 2-SFTP)</li>
+      <li>Do you want to input SCP/SFTP options (Y/N) = N</li>
+      <li>Password</li>
+      <li>Do you want to continue with CRA (Y/N) = N</li>
+    </ol>
+  </li>
+  <li>The switch will do a warm/nondisruptive upgrade and will disconnect SSH, but I/O will not be disrupted.</li>
+  <li>Use the following commands to verify firmware status<br><code>firmwareshow</code><br><code>firmwaredownloadstatus</code></li>
+</ol>
+<h2>USING USB</h2>
+<p><a href="/Brocade/USB-Firmware-Upgrade">Upgrade Firmware Using a USB Stick</a></p>
+<h1>Download TrueFOS Certificate</h1>
+<ul>
+  <li>For IBM:<ul>
+      <li>Go to <a href="https://ibm.com/support">https://ibm.com/support</a> and choose FixCentral and enter the appropriate IBM switch type (SAN24B-6, etc)</li>
+      <li>Eventually, get to the Assist Portal Download Screen and click the hyperlink for TrueFOS Certificates</li>
+      <li>Enter the License ID from the switch and an email address to receive the license.</li>
+    </ul>
+  </li>
+</ul>
+<pre><code class="language-plaintext">license --show -lid</code></pre>
+<p>&nbsp;</p>
