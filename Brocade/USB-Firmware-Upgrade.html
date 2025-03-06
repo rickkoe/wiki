@@ -1,0 +1,30 @@
+<!--
+title: Upgrade Firmware Using a USB Stick
+description: 
+published: true
+date: 2025-03-06T00:14:23.168Z
+tags: brocade
+editor: ckeditor
+dateCreated: 2025-03-06T00:14:23.168Z
+-->
+
+<p>&nbsp;1. &nbsp;Download the firmware from IBM or Brocade.</p>
+<p>&nbsp;2. &nbsp;Extract the .zip file.</p>
+<p>&nbsp;3. &nbsp;Copy the extracted folder to the USB drive. &nbsp;</p>
+<p>&nbsp;4. &nbsp;Insert the USB into the switch or the active CP of the director.</p>
+<p>&nbsp;5. &nbsp;Enable the USB.</p>
+<pre><code class="language-plaintext">usbstorage -e</code></pre>
+<p>&nbsp;6. &nbsp;List the contents of the the USB.</p>
+<pre><code class="language-plaintext">usbstorage -l</code></pre>
+<p>&nbsp;7. &nbsp;Start the firmware install from the USB by specifying the path to the extracted folder.</p>
+<pre><code class="language-plaintext">firmwaredownload -U v9.2.0c3_G6G7_DIR</code></pre>
+<p>&nbsp;8. &nbsp;Firmware install should start and prompt with the following (enter ‘Y’):</p>
+<pre><code class="language-plaintext">Do you accept and agree to the terms outlined in the End User License Agreement(EULA) for this product?
+Please respond with (Y/y) to Accept, (N/n) to Not accept, or (D/d) to display the EULA : </code></pre>
+<p>&nbsp;9. &nbsp;Enter ‘Y’ to the next command about warm boot:</p>
+<pre><code class="language-plaintext">System settings check passed.
+This command will upgrade the firmware on both CP blades. If you want to
+upgrade firmware on a single CP only, please use -s option. You may run firmwaredownloadstatus to get the status of this
+command. This command will cause a warm/non-disruptive boot on the active CP,
+but will require that existing telnet, secure telnet or SSH sessions
+be restarted.</code></pre>
