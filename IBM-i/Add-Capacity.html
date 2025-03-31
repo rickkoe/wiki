@@ -2,7 +2,7 @@
 title: Add Capacity to an IBM i LPAR
 description: 
 published: true
-date: 2025-01-24T22:33:57.279Z
+date: 2025-03-31T19:46:30.717Z
 tags: ibm, ibmi
 editor: ckeditor
 dateCreated: 2025-01-24T15:16:38.705Z
@@ -11,12 +11,24 @@ dateCreated: 2025-01-24T15:16:38.705Z
 <ol>
   <li>Determine how much capacity to add. &nbsp;What is the current volume size for the LPAR? &nbsp;How many volumes need to be added to satisfy the capacity needs.</li>
   <li>Map volumes to host(s). &nbsp;Ensure you are not mapping more than 127 volumes per host on the FlashSystem/DS8000.</li>
-  <li>Initialize and format the disk units &nbsp;<strong>From the Use Dedicated Service Tools (DST) display, select Work with disk units &gt; Work with disk unit recovery &gt; Disk unit problem recovery procedures &gt; Initialize and format disk unit</strong>. Select the disk unit you want to initialize and format. Press F10 on the confirmation display.</li>
+  <li>Initialize and format the disk units &nbsp;using SST.</li>
+</ol>
+<ul>
+  <li><strong>Option 3. Work with disk units</strong></li>
+  <li><strong>Option 3. Work with disk unit recovery</strong></li>
+  <li><strong>Option 2. Disk unit problem recovery procedures&nbsp;</strong></li>
+  <li><strong>Option 1. Initialize and format disk unit</strong>.&nbsp;<ul>
+      <li>Select the disk unit you want to initialize and format. Press F10 on the confirmation display.</li>
+    </ul>
+  </li>
+</ul>
+<ol>
   <li>Replicate the volumes</li>
   <li>Add volumes to the ASP</li>
   <li>Start balance</li>
 </ol>
 <pre><code class="language-plaintext">STRASPBAL</code></pre>
+<p>&nbsp;</p>
 <pre><code class="language-plaintext">Balance type = *CAPACITY
 ASP number = *ALL
 Time limit = *NOMAX
