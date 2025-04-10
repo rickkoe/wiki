@@ -1,0 +1,43 @@
+<!--
+title: Ansible Vault
+description: 
+published: true
+date: 2025-04-10T18:07:59.972Z
+tags: ansible, automation
+editor: ckeditor
+dateCreated: 2025-04-10T18:07:59.972Z
+-->
+
+<ul>
+  <li>Enter the location of the Vault file in the <strong>var_files</strong> parameter of the playbook</li>
+</ul>
+<pre><code class="language-plaintext">---
+- name: List all sessions from IBM CSM server
+ hosts: localhost
+ gather_facts: no
+ vars_files:
+   - ../group_vars/csm/vault.yml
+ tasks:
+   - name: Retrieve all session information
+     ibm.csm.ibm_csm_info:
+       hostname: "{{ csm_host }}"
+       username: "{{ csm_username }}"
+       password: "{{ csm_password }}"
+       gather_subset:
+         - session_list_short
+     register: csm_sessions</code></pre>
+<ul>
+  <li>Create the vault file. &nbsp;Store it unger group_vars. &nbsp;In the example above, I made a group_vars/csm folder to store it in since it will be the vault for all CSM servers (only have two). &nbsp;The vault file would look like this:</li>
+</ul>
+<pre><code class="language-plaintext">---
+csm_host: "ibmcsm01.esilabs.com"
+csm_username: "csmadmin"
+csm_password: "abc123!!"</code></pre>
+<ul>
+  <li>Encrypt the vault. &nbsp;You will be prompted to create a vault password. &nbsp;The password is used to decrypt the vault when running the playbook.</li>
+</ul>
+<pre><code class="language-plaintext">ansible-vault encrypt ../group_vars/csm/vault.yml</code></pre>
+<ul>
+  <li>Now run the playbook with the --ask-vault-pass flag and you will be prompted to enter the vault password.</li>
+</ul>
+<pre><code class="language-plaintext">ansible-playbook playbooks/csm.yml --ask-vault-pass</code></pre>
