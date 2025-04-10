@@ -2,7 +2,7 @@
 title: Ansible
 description: 
 published: true
-date: 2025-04-10T18:00:36.225Z
+date: 2025-04-10T20:09:01.999Z
 tags: ansible
 editor: ckeditor
 dateCreated: 2025-04-10T17:53:04.769Z
@@ -10,3 +10,5 @@ dateCreated: 2025-04-10T17:53:04.769Z
 
 <p><a href="/Ansible/Ansible-Vault">Using Ansible Vault</a></p>
 <p><a href="/Ansible/CSM">Ansible with CSM</a></p>
+<p>Command to get JSON structure:</p>
+<pre><code class="language-plaintext">jq -r 'paths | map(tostring) | join(".")' text.json | sort -u</code></pre>
