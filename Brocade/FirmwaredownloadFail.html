@@ -1,0 +1,30 @@
+<!--
+title: FOS v9.1.1 DownloadFail
+description: 
+published: true
+date: 2025-04-16T13:06:48.280Z
+tags: 
+editor: ckeditor
+dateCreated: 2025-04-16T13:06:48.280Z
+-->
+
+<p><span class="text-big">FOS version known issue with FOS v9.1.1- Firmwaredownload Fail</span></p>
+<p>Ticket will need to be opened with support to resolve as service access is needed.&nbsp;</p>
+<p>******Steps will need to be run on both CPs- start with CP0)****</p>
+<p>1.) Get response token</p>
+<p>&nbsp; &nbsp; a. Logon on as maintenance id (def password)</p>
+<p>&nbsp; &nbsp; b. Change password 'userconfig --change maintenance -e yes'</p>
+<p>&nbsp; &nbsp; c. Generate token 'serviceshell --generate'</p>
+<p>&nbsp; &nbsp; d. Show license 'license --show lid'</p>
+<p>The above will be needed for support to generate response token. &nbsp;</p>
+<p>&nbsp;</p>
+<p>2.) Cleanup and reinit package database &nbsp;</p>
+<p>&nbsp; &nbsp; a. Logon on as maintenance id</p>
+<p>&nbsp; &nbsp; b. Enable serviceshell 'serviceshell --authenticate "response token"'</p>
+<p>&nbsp; &nbsp; c. Activate serviceshell 'serviceshell --activate' &nbsp;</p>
+<p>&nbsp; &nbsp; d. List files in image directory 'ls /mnt/var/images/'</p>
+<p>&nbsp; &nbsp; e. Remove images from directory 'rm -rf /mnt/var/images/*'</p>
+<p>&nbsp;</p>
+<p>3.) Repeat step 1 &amp; 2 for standby CP. &nbsp;</p>
+<p>4.) Reattempt firmwaredownload. &nbsp;</p>
+<p>&nbsp;</p>
