@@ -1,0 +1,167 @@
+<!--
+title: FlashSystem Partition
+description: 
+published: true
+date: 2025-04-23T17:24:09.842Z
+tags: 
+editor: ckeditor
+dateCreated: 2024-11-04T18:04:01.916Z
+-->
+
+<h1>Flash Partition</h1>
+<p>Storage partitions are management entities that encompass related volume groups, volumes, host ports, and mappings.<br>Once a partition has been created it can be moved to a different FlashSystem or can be configured for PBHA.</p>
+<blockquote>
+  <p><span class="text-big"><i>Ensure the following requirements are met before setting up</i></span></p>
+</blockquote>
+<ul>
+  <li><i>Zoning should be in place so Host connectivity is available to all systems that will be part of the setup if implementing HA or planning partition migration.</i></li>
+  <li><i>Code Level is at 8.7.0 or above</i></li>
+</ul>
+<h2>Partition Setup:</h2>
+<h2>Partition Migration:</h2>
+<p>To use this feature for migration the current Flash System should be in the same Flash Grid. Any async replications must be removed before you can move the partition to another Flash System. The target Flash System should have connectivity to the Host/s that are currently utilizing the Flash System that will be migrated.</p>
+<p>1. On systems that owns the partition ensure partnership exists for the target system.</p>
+<ul>
+  <li>list current partners defined to the system</li>
+</ul>
+<pre><code class="language-plaintext">lspartnership</code></pre>
+<p>2. List partitions &nbsp;and note id of partition to be moved.</p>
+<ul>
+  <li>list current partitions defined on the current system</li>
+</ul>
+<pre><code class="language-plaintext">lspartition</code></pre>
+<p>3. Migrate desired partition to desired system.</p>
+<ul>
+  <li>migrate named partition to system identified after location flag. The name or id can be used.</li>
+</ul>
+<pre><code class="language-plaintext">chpartition -location sys_name partition_name</code></pre>
+<p>4. Monitor the migration using the CLI and/or GUI.</p>
+<ul>
+  <li>Looking at the GUI, a replication policy should appear in the Partition. &nbsp;It will initially show <i>Establishing as data is synchronized.</i></li>
+</ul>
+<figure class="image"><img src="/fs_partition_migration_1.png" alt=""></figure>
+<ul>
+  <li>Eventually, both sites will show <i>Production system.</i></li>
+</ul>
+<figure class="image"><img src="/fs_partition_migration_2.png" alt=""></figure>
+<ul>
+  <li>The partition <i>migration_status</i> show now show a state of <i>awaiting_user_input</i></li>
+</ul>
+<pre><code class="language-plaintext">lspartition</code></pre>
+<p>5. &nbsp;Before continuing with the migration, you MUST rescan the host to pick up the new paths from the target storage system.</p>
+<p>Verify the current paths</p>
+<pre><code class="language-plaintext">multipath -ll</code></pre>
+<p>Example</p>
+<pre><code class="language-plaintext">[root@rhelsbx01 ~]# multipath -ll
+mpathr (3600507681281017df800000000006643) dm-5 IBM     ,2145
+size=32G features='1 queue_if_no_path' hwhandler='0' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 2:0:1:4 sdk 8:160  active ready running
+| `- 3:0:1:4 sdw 65:96  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 2:0:0:4 sde 8:64   active ready running
+  `- 3:0:0:4 sdq 65:0   active ready running</code></pre>
+<p>Pickup the new paths using this command:</p>
+<pre><code class="language-plaintext">rescan-scsi-bus.sh -a</code></pre>
+<p>Verify new paths are discovered</p>
+<pre><code class="language-plaintext">multipath -ll</code></pre>
+<p>Example</p>
+<pre><code class="language-plaintext">[root@rhelsbx01 ~]# multipath -ll
+mpathr (3600507681281017df800000000006643) dm-5 IBM     ,2145
+size=32G features='1 queue_if_no_path' hwhandler='0' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:1:4 sdk  8:160  active ready running
+| `- 3:0:1:4 sdw  65:96  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 2:0:0:4 sde  8:64   active ready running
+  |- 3:0:0:4 sdq  65:0   active ready running
+  |- 2:0:2:4 sdac 65:192 active ready running
+  |- 2:0:3:4 sdai 66:32  active ready running
+  |- 3:0:2:4 sdao 66:128 active ready running
+  `- 3:0:3:4 sdau 66:224 active ready running
+</code></pre>
+<p>6. Answer mark fix Events as part of the migration process.</p>
+<ul>
+  <li>CLI - On owning &amp; target system mark event as ‘fix’ &nbsp;for the events.</li>
+</ul>
+<pre><code class="language-plaintext">lseventlog </code></pre>
+<ul>
+  <li>Error Code: <i>4260</i></li>
+  <li>Error Code Text: <i>Storage partition migration is paused. User action is required.</i></li>
+</ul>
+<pre><code class="language-plaintext">cheventeventlog -fix xxx</code></pre>
+<p>&nbsp;</p>
+<ul>
+  <li>GUI - On owning &amp; target system ‘Mark as Fixed’ or ‘Run Fix’ the Event.<ul>
+      <li>Owning system<ul>
+          <li>Event ID Text: <i>Host validation pending. Fix the event after validating the host to resume partition migration.</i></li>
+          <li>Error Code: <i>4260</i></li>
+          <li>Error Code Text: <i>Storage partition migration is paused. User action is required.</i></li>
+        </ul>
+      </li>
+      <li>Target system<ul>
+          <li>Event ID Text: <i>Source copy deletion is pending. User intervention is required.</i></li>
+          <li>Error Code: <i>4260</i></li>
+          <li>Error Code Text: <i>Storage partition migration is paused. User action is required.</i></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<pre><code class="language-plaintext">cheventeventlog -fix xxx</code></pre>
+<p>7. Verify the partition has been deleted on source, exists on new system, and no errors in event log.</p>
+<pre><code class="language-plaintext">lspartition</code></pre>
+<p>8. The host operating system will now show faulty paths. &nbsp;Remove the faulty paths and verify</p>
+<pre><code class="language-plaintext">multipath -ll</code></pre>
+<p>Example</p>
+<pre><code class="language-plaintext">[root@rhelsbx01 ~]# multipath -ll
+mpathr (3600507681281017df800000000006643) dm-5 IBM     ,2145
+size=32G features='1 queue_if_no_path' hwhandler='0' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:4 sde  8:64   active ready running
+| `- 3:0:0:4 sdq  65:0   active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+ |- 2:0:3:4 sdai 66:32  failed faulty running
+ |- 3:0:3:4 sdau 66:224 failed faulty running
+ |- 2:0:2:4 sdac 65:192 failed faulty running
+ |- 3:0:2:4 sdao 66:128 failed faulty running
+ |- 2:0:1:4 sdk  8:160  active ready running
+ `- 3:0:1:4 sdw  65:96  active ready running</code></pre>
+<p>Those can be cleaned up on RHEL with a script like this:</p>
+<pre><code class="language-plaintext">#!/bin/bash
+
+echo "Identifying and removing faulty paths..."
+
+# Get the multipath output and filter for failed paths
+multipath_output=$(multipath -ll)
+
+# Use grep to extract device names with "failed faulty"
+# The device names usually follow this pattern, e.g., `sdX`
+failed_paths=$(echo "$multipath_output" | grep -E "faulty" | awk '{print $3}')
+
+# Check if any failed paths were found
+if [[ -z "$failed_paths" ]]; then
+ echo "No faulty paths found."
+else
+ # Loop through each failed path and remove it
+ for path in $failed_paths; do
+   echo "Removing faulty path: $path"
+   echo 1 &gt; /sys/block/$path/device/delete
+ done
+fi
+
+# Rescan multipath devices after removing the faulty paths
+echo "Rescanning multipath devices..."
+multipath -r
+
+echo "Completed removing faulty paths."</code></pre>
+<p>Example:</p>
+<pre><code class="language-plaintext">[root@rhelsbx01 ~]# multipath -ll
+mpathr (3600507681281017df800000000006643) dm-5 IBM     ,2145
+size=32G features='1 queue_if_no_path' hwhandler='0' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 2:0:0:4 sde 8:64   active ready running
+| `- 3:0:0:4 sdq 65:0   active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+ |- 2:0:1:4 sdk 8:160  active ready running
+ `- 3:0:1:4 sdw 65:96  active ready running</code></pre>
