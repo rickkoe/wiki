@@ -2,7 +2,7 @@
 title: IBMi Migration Cleanup Steps
 description: 
 published: true
-date: 2025-04-25T03:34:22.903Z
+date: 2025-04-25T03:41:53.369Z
 tags: ibmi, migration, cleanup
 editor: markdown
 dateCreated: 2023-01-22T14:31:03.489Z
@@ -15,14 +15,15 @@ dateCreated: 2023-01-22T14:31:03.489Z
 - Log in
 - Option 7 Start a service tool
 - Option 4 hardware service manager
-- (Old Way - remove non reporting by entering 4 on each line)
-      - Option 4  failed and non-reporting resources
-      - Delete all failed and non-reporting resources with a 4 on each line (enter)
 - (New Way - remove non reporting all at once)
         - Option 1 Packaging hardware resources (systems, frames, cards,...)
         - F10 Non reporting rsources
         - F7 Remove all non reporting resources
         - Press Enter to confirm
+- (Old Way - remove non reporting by entering 4 on each line)
+      - Option 4  failed and non-reporting resources
+      - Delete all failed and non-reporting resources with a 4 on each line (enter)
+
 
 *This should remove all logical names for the internal disks so they are not part of the configuration and prevent errors*
 ## Call multipathresetter
