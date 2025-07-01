@@ -2,7 +2,7 @@
 title: ESE and SGC Sizer in CSM
 description: 
 published: true
-date: 2025-07-01T21:00:48.165Z
+date: 2025-07-01T21:05:30.903Z
 tags: csm
 editor: ckeditor
 dateCreated: 2025-01-23T17:00:32.633Z
@@ -29,11 +29,11 @@ dateCreated: 2025-01-23T17:00:32.633Z
       <li>16 GB ≤ 60 TiB</li>
     </ul>
   </li>
-  <li>Calculation for estimation of Optimal heap size Device Memory usage (Mb) = Number of devices * 66<ul>
+  <li>Calculation for estimation of Optimal heap size - device memory usage (Mb) = Number of devices * 66<ul>
       <li>Nonsession processing = 512 MB (required)</li>
       <li>Non-safeguarded Copy sessions = 256 MB / 25,000 pairs (# of pairs/copy sets times the # of role pairs in the session)</li>
-      <li>Safeguarded Copy sessions = .8 KB &nbsp;*&nbsp;<i> (# of volumes) &nbsp;* &nbsp;(# of backups)</i></li>
-      <li>Total =&nbsp;<i>&nbsp;</i> Nonsession processing + Non-safeguarded Copy sessions + Device Memory Usage</li>
+      <li>Safeguarded Copy sessions = .8 KB &nbsp;*&nbsp;<i> (# of volumes) &nbsp;* &nbsp;(# of backups “ie - retention”)</i></li>
     </ul>
   </li>
+  <li>Total =&nbsp;<i>&nbsp;</i> Nonsession processing + Non-safeguarded Copy sessions + Device Memory Usage</li>
 </ul>
