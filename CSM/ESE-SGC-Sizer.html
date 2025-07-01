@@ -2,7 +2,7 @@
 title: ESE and SGC Sizer in CSM
 description: 
 published: true
-date: 2025-01-23T17:00:32.633Z
+date: 2025-07-01T21:00:26.160Z
 tags: csm
 editor: ckeditor
 dateCreated: 2025-01-23T17:00:32.633Z
@@ -12,4 +12,28 @@ dateCreated: 2025-01-23T17:00:32.633Z
 <ul>
   <li><a href="https://www.ibm.com/support/pages/node/6372180">DS8000 Safeguarded Copy and Extent Space Efficient (ESE) FlashCopy® capacity sizing by using the CSM ESESizer or SGCSizer functionality</a></li>
   <li><a href="https://www.ibm.com/docs/en/csm/6.3.13?topic=administering-calculating-server-memory-requirements">Setting the Java heap size</a></li>
+</ul>
+<p>&nbsp;</p>
+<h1>Calculating CSM Memory Requirements</h1>
+<ul>
+  <li>Sizing is not required for SGCsizer</li>
+  <li>Default: 1280MB</li>
+  <li>java heap location(Xmxm parm in jvm.options file) &nbsp;&nbsp;<ul>
+      <li>window- install dir/liberty/wlp/usr/servers/csmServer/jvm.options</li>
+      <li><i>zOS - path_prefix</i>/opt/IBM/CSM/wlp/usr/server/csmServer/jvm.options</li>
+    </ul>
+  </li>
+  <li>Java heap size DS8000 capacity<ul>
+      <li>4 GB ≤ 20 TiB</li>
+      <li>8 GB ≤ 60 TiB</li>
+      <li>16 GB ≤ 60 TiB</li>
+    </ul>
+  </li>
+  <li>Calculation for estimation of Optimal heap size Device Memory usage (Mb) = Number of devices * 66<ul>
+      <li>Nonsession processing = 512 MB (required)</li>
+      <li>Non-safeguarded Copy sessions = 256 MB / 25,000 pairs (# of pairs/copy sets times the # of role pairs in the session)</li>
+      <li>Safeguarded Copy sessions = .8 KB &nbsp;*&nbsp;<i> (# of volumes) &nbsp;* &nbsp;(# of backups)</i></li>
+      <li>Total =&nbsp;<i>&nbsp;</i> Nonsession processing + Non-safeguarded Copy sessions + Device Memory Usage</li>
+    </ul>
+  </li>
 </ul>
