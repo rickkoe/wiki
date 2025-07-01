@@ -2,7 +2,7 @@
 title: ESE and SGC Sizer in CSM
 description: 
 published: true
-date: 2025-07-01T21:05:30.903Z
+date: 2025-07-01T21:18:25.066Z
 tags: csm
 editor: ckeditor
 dateCreated: 2025-01-23T17:00:32.633Z
@@ -17,7 +17,7 @@ dateCreated: 2025-01-23T17:00:32.633Z
 <h1>Calculating CSM Memory Requirements (ESESizer)</h1>
 <ul>
   <li>Sizing is not required for SGCsizer</li>
-  <li>Default: 1280MB</li>
+  <li>Default heap size: 1280MB</li>
   <li>java heap location(Xmxm parm in jvm.options file) &nbsp;&nbsp;<ul>
       <li>window- install dir/liberty/wlp/usr/servers/csmServer/jvm.options</li>
       <li><i>zOS - path_prefix</i>/opt/IBM/CSM/wlp/usr/server/csmServer/jvm.options</li>
@@ -30,10 +30,22 @@ dateCreated: 2025-01-23T17:00:32.633Z
     </ul>
   </li>
   <li>Calculation for estimation of Optimal heap size - device memory usage (Mb) = Number of devices * 66<ul>
-      <li>Nonsession processing = 512 MB (required)</li>
-      <li>Non-safeguarded Copy sessions = 256 MB / 25,000 pairs (# of pairs/copy sets times the # of role pairs in the session)</li>
-      <li>Safeguarded Copy sessions = .8 KB &nbsp;*&nbsp;<i> (# of volumes) &nbsp;* &nbsp;(# of backups “ie - retention”)</i></li>
+      <li>Nonsession processing = 512 MB (required) ------------ &gt; <mark class="marker-yellow">512 MB&nbsp;</mark></li>
+      <li>Non-safeguarded Copy sessions = 256 MB / 25,000 pairs (# of pairs/copy sets times the # of role pairs in the session) &nbsp;------ &gt; &nbsp;15000 vols x 3 roles = 45000&nbsp;<ul>
+          <li>need <mark class="marker-yellow">512 MB</mark> to cover non-sgc sessions &nbsp;</li>
+        </ul>
+      </li>
+      <li>Safeguarded Copy sessions = <i>(# of volumes) &nbsp;x &nbsp;(# of backups “ie - retention”) &nbsp;x </i>.8 KB &nbsp;<i> ---- &gt; 2000vols &amp; 250 bckups - &nbsp;2000 x 250 x .8 = <mark class="marker-yellow">400 MB</mark></i></li>
     </ul>
   </li>
-  <li>Total =&nbsp;<i>&nbsp;</i> Nonsession processing + Non-safeguarded Copy sessions + Device Memory Usage</li>
+  <li><span class="text-big">Total =&nbsp;<i>&nbsp;</i> Nonsession processing + Non-safeguarded Copy sessions + Device Memory Usage</span>
+    <ul>
+      <li><mark class="marker-yellow">512</mark> MB + <mark class="marker-yellow">512</mark> MB + <mark class="marker-yellow">400</mark> MB = 1,424 MB</li>
+    </ul>
+  </li>
 </ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
