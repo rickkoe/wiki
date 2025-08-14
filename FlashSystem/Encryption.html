@@ -1,0 +1,254 @@
+<!--
+title: CLI Encryption  & Recovery Key Enablement 
+description: 
+published: true
+date: 2025-08-14T03:52:50.758Z
+tags: encryption
+editor: ckeditor
+dateCreated: 2024-11-18T22:49:53.159Z
+-->
+
+<h2 class="toc-header" id="cli-usb-encryption-enablement"> CLI USB Encryption Enablement</h2>
+<p>The&nbsp;following are steps to use CLI to enable encryption on IBM FlashSystem.&nbsp;</p>
+<p>Process only includes cli setup for USB enablement. Key server setup will be added at a later time.&nbsp;</p>
+<p>In short the process is to enable, prepare, and then commit.<br>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<blockquote>
+  <p><span class="text-big"><i>Ensure the following requirements are met before setting up</i></span></p>
+</blockquote>
+<ul>
+  <li>At least 3 USB sticks are available</li>
+  <li>License Key has been applied to the FlashSystem</li>
+  <li>No pools exist on the system.</li>
+</ul>
+<p>&nbsp;</p>
+<h5 class="toc-header" id="usb-encryption-enablement"> <span class="text-big">USB Encryption Enablement</span></h5>
+<p><span class="text-big">1. SSH into cluster&nbsp;</span></p>
+<p><span class="text-big">2. Verify license has been activated</span></p>
+<p>list encryption<br><span class="text-big"><code>lsencryption</code></span></p>
+<p>output: (line 1)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status licensed
+error_sequence_number
+usb_rekey no_key
+usb_key_copies 0
+usb_key_filename
+usb_rekey_filename
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status licensed
+recovery_key_rekey no_key
+recovery_key_name
+recovery_key_rekey_name</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">3. Verify USB are recognized</span></p>
+<p>list usb port<br><code>lsportusb</code></p>
+<p>output: (status ‘active’)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">id node_id node_name node_side port_id status encryption_state service_state
+0  1       node1     rear      1       active
+8  2       node2     rear      1       active</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">4. Enable encryption for USB</span></p>
+<p>chencryption<br><code>chencryption -usb enable</code></p>
+<p>output:&nbsp;<br>no response given back</p>
+<p>&nbsp;</p>
+<p><span class="text-big">5. Verify USB encryption is Enabled</span></p>
+<p>list encryption<br><span class="text-big"><code>lsencryption</code></span></p>
+<p>output: (line 1)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey no_key
+usb_key_copies 0
+usb_key_filename
+usb_rekey_filename
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status licensed
+recovery_key_rekey no_key
+recovery_key_name
+recovery_key_rekey_name</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">6. Generate encryption key &amp; prepare(writes key to usb)</span></p>
+<p>chencryption<br><code>chencryption -usb newkey -key prepare</code></p>
+<p>output:<br>no response given back</p>
+<p>&nbsp;</p>
+<p><span class="text-big">7. Verify key filename and number of usb copies.&nbsp;</span><br><span class="text-big">&nbsp; &nbsp; &nbsp;</span><i>note: Remember a total of at least 3 usb copies is needed for enablement.&nbsp;</i></p>
+<p>list encryption<br><span class="text-big"><code>lsencryption</code></span></p>
+<p>output: (line 3 &amp; 4)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey prepared
+usb_key_copies 2
+usb_key_filename
+usb_rekey_filename encryptionkey_00000204A0605F7E_A0605F7E00000001_FS5200
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status licensed
+recovery_key_rekey no_key
+recovery_key_name
+recovery_key_rekey_name</code></pre>
+<p><br><span class="text-big">8. Remove one usb stick and replace with the required 3rd one.&nbsp;</span><br>&nbsp;</p>
+<p><span class="text-big">9. Verify key filename and number of usb copies.&nbsp;Listing should now show a total of 3 copies. &nbsp;</span></p>
+<p>list encryption<br><span class="text-big"><code>lsencryption</code></span></p>
+<p>output: (line 4)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey prepared
+usb_key_copies 3
+usb_key_filename
+usb_rekey_filename encryptionkey_00000204A0605F7E_A0605F7E00000001_FS5200
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status licensed
+recovery_key_rekey no_key
+recovery_key_name
+recovery_key_rekey_name</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">10. Commit new encryption key to the system</span></p>
+<p>chencryption<br><code>chencryption -usb newkey -key commit</code></p>
+<p>output:<br>no response given back<br>&nbsp;</p>
+<p><span class="text-big">11. &nbsp;Verify usb_rekey is now set ‘no’ which means enablement was successful</span></p>
+<p>list encryption<br><span class="text-big"><code>lsencryption</code></span></p>
+<p>output: (line 3)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey no
+usb_key_copies 3
+usb_key_filename encryptionkey_00000204A0605F7E_A0605F7E00000001_FS5200
+usb_rekey_filename
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status licensed
+recovery_key_rekey no_key
+recovery_key_name
+recovery_key_rekey_namee</code></pre>
+<p>&nbsp;</p>
+<h2 class="toc-header" id="cli-recovery-key-enablement"> <span class="text-big">CLI Recovery Key Enablement</span></h2>
+<p>In later releases of SVC the system allows for recovery keys to be generate in event of losing the usb sticks and/or the key server is no longer accessible.&nbsp;<br>The following outlines the steps needed to create a recovery key with cli.&nbsp;</p>
+<p>In short the process is to enable, prepare, confirm and then commit.<br>&nbsp;</p>
+<hr>
+<p><span class="text-big">1. SSH into cluster&nbsp;</span></p>
+<p><span class="text-big">2. Enable recovery key</span></p>
+<p>chencryption<br><code>chencryption -recoverykey enable</code></p>
+<p>output:&nbsp;<br>no response given back</p>
+<p>&nbsp;</p>
+<p><span class="text-big">3. &nbsp;Generate a new recovery key</span></p>
+<p>chencryption<br><code>chencryption -recoverykey newkey -key prepare</code></p>
+<p>output:&nbsp;<br><code>CMMVC1127I The new recovery key for the system is: q0Fzb8Mke0MTW/I+dx1tpIE1Jf4iaJ2Sa4dnmjqvuB0=</code><br><br><i><strong>NOTE: </strong>Copy recovery and store in safe place</i>.&nbsp;</p>
+<p>&nbsp;</p>
+<p><span class="text-big">4. &nbsp;Verify recovery status is enabled, rekey is in prepared state and recovery key rekey name exists.&nbsp;</span></p>
+<p>list encryption<br><span class="text-big"><code>lsencryption</code></span></p>
+<p>output: (lines 11, 12, &amp; 14)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey no
+usb_key_copies 3
+usb_key_filename encryptionkey_00000204A0605F7E_A0605F7E00000001_FS5200
+usb_rekey_filename
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status enabled
+recovery_key_rekey prepared
+recovery_key_name
+recovery_key_rekey_name recoverykey_00000204A0605F7E_A0605F7E00000001_FS5200</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">5. Confirm new recovery key</span></p>
+<p>chencryption<br><code>chencryption -recoverykey newkey -key confirm</code></p>
+<p>output: (enter recovery key at prompt)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">Enter the new recovery key for the system:
+
+Success: CMMVC1153I The recovery key has been entered correctly.</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">6. Validate recovery key rekey</span></p>
+<p>lsencryption<br><code>lsencryption</code></p>
+<p>output: (line 12)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey no
+usb_key_copies 3
+usb_key_filename encryptionkey_00000204A0605F7E_A0605F7E00000001_FS5200
+usb_rekey_filename
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status enabled
+recovery_key_rekey confirmed
+recovery_key_name
+recovery_key_rekey_name recoverykey_00000204A0605F7E_A0605F7E00000001_FS5200</code></pre>
+<p>&nbsp;</p>
+<p><span class="text-big">7. Commit new recovery key to the system</span></p>
+<p>chencryption<br><code>chencryption -recoverykey newkey -key commit</code></p>
+<p>output:<br>no response given back</p>
+<p>&nbsp;</p>
+<p><span class="text-big">8. Verify recovery key items</span></p>
+<ul>
+  <li>recovery key rekey is ‘no’</li>
+  <li>recovery key name exists</li>
+  <li>recovery key rekey name is no longer present</li>
+</ul>
+<p>lsencryption<br><code>lsencryption</code></p>
+<p>output: (line 12,13, &amp; 14)</p>
+<pre class="prismjs line-numbers" v-pre="true"><code class="language-plaintext">status enabled
+error_sequence_number
+usb_rekey no
+usb_key_copies 3
+usb_key_filename encryptionkey_00000204A0C05FB8_A0C05FB800000001_FS5200_DR
+usb_rekey_filename
+keyserver_status licensed
+keyserver_rekey no_key
+keyserver_pmk_uid
+keyserver_pmk_rekey_uid
+recovery_key_status enabled
+recovery_key_rekey no
+recovery_key_name recoverykey_00000204A0C05FB8_A0C05FB800000001_FS5200_DR
+recovery_key_rekey_name</code></pre>
+<p>&nbsp;</p>
+<h2 class="toc-header" id="flashsystem-infolab"> FlashSystem Info(Lab)</h2>
+<p>Encryption&nbsp;License:</p>
+<figure class="table">
+  <table>
+    <tbody>
+      <tr>
+        <td>11/18/24</td>
+        <td>FS5200_DR (78F1CL6)&nbsp;</td>
+        <td>6FCE-9FDB-18A9-161B</td>
+      </tr>
+      <tr>
+        <td>11/18/24</td>
+        <td>FS5200 &nbsp; &nbsp; &nbsp; &nbsp;(78F1CKP)&nbsp;</td>
+        <td>58F5-EBA6-FB12-535F</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<p>Recovery Key:</p>
+<figure class="table">
+  <table>
+    <tbody>
+      <tr>
+        <td>11/18/24</td>
+        <td>FS5200_DR (78F1CL6)&nbsp;</td>
+        <td><mark class="marker-yellow">Clustered&nbsp;</mark></td>
+      </tr>
+      <tr>
+        <td>11/18/24</td>
+        <td>FS5200 &nbsp; &nbsp; &nbsp; &nbsp;(78F1CKP)&nbsp;</td>
+        <td>q0Fzb8Mke0MTW/I+dx1tpIE1Jf4iaJ2Sa4dnmjqvuB0=</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<p>&nbsp;</p>
