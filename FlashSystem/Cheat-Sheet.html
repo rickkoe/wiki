@@ -2,7 +2,7 @@
 title: FlashSystem Cheat Sheet
 description: 
 published: true
-date: 2025-09-02T16:24:55.544Z
+date: 2025-09-02T16:28:02.333Z
 tags: ibm, flashsystem
 editor: ckeditor
 dateCreated: 2025-09-02T16:24:55.544Z
@@ -12,3 +12,26 @@ dateCreated: 2025-09-02T16:24:55.544Z
 <pre><code class="language-plaintext">satask chfcportfeature -feature port_state -enable no -fcioportid 1</code></pre>
 <p>Enable FC Port</p>
 <pre><code class="language-plaintext">satask chfcportfeature -feature port_state -enable yes -fcioportid 1</code></pre>
+<p>List current date and time</p>
+<pre><code class="language-plaintext">svqueryclock
+</code></pre>
+<p>Recover offline volumes (i/o group went offline and lose cache)</p>
+<pre><code class="language-plaintext">recovervdiskbysystem
+</code></pre>
+<p>Manually resuming code activation</p>
+<pre><code class="language-plaintext">lsupdate
+applysoftware -continue
+</code></pre>
+<p>Restart Web Service</p>
+<pre><code class="language-plaintext">satask restartservice -service tomcat
+</code></pre>
+<p>IP Replication requires the following firewall ports opened:</p>
+<ul>
+  <li>Cluster IPs: 3260</li>
+  <li>Data IPs: 3265</li>
+</ul>
+<p>Script to Rename Volumes</p>
+<pre><code class="language-plaintext">lsvdisk -nohdr | grep -v scsi | while read -a line ; do new_name=${line[1]//msc520/bscbak};new_name=${new_name%_01} ; chvdisk -name $new_name ${line[1]}; done
+</code></pre>
+<p>Script to validate cabling</p>
+<pre><code class="language-plaintext">lsportfc -nohdr | while read -a port; do printf "%s,port%s," "${port[6]}" "${port[2]}"; lsportfc "${port[0]}" | grep fabric_WWN ; done</code></pre>
