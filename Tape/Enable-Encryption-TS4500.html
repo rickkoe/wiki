@@ -2,13 +2,14 @@
 title: Enabling Encryption TS4500 Tape Libraries
 description: 
 published: true
-date: 2025-09-03T19:53:41.290Z
+date: 2025-09-03T19:54:03.669Z
 tags: tape, ts4500, encryption
 editor: ckeditor
 dateCreated: 2025-09-03T19:47:51.044Z
 -->
 
-<p>Setting up Key servers on TS4500 using TLS1.2 isn't very well documented. &nbsp;Here's how we got it to work at Prime:</p>
+<h1>Setting up Key servers on TS4500 using TLS1.2</h1>
+<p>This isn't very well documented. &nbsp;Here's how we got it to work at Prime:</p>
 <ul>
   <li>Go to Settings → Security → Secure Communications and set to <strong>On </strong>(you will lose browser access for about 5 minutes. &nbsp;It gives a timer, but takes way longer to come back than that).</li>
   <li>Go to the GKLM server, Advanced Configuration → System Certificates and download the key serving cert in base 64.</li>
