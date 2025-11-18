@@ -2,20 +2,19 @@
 title: Primary Migration within GMP Topology 
 description: Primary Disk Migration in GMP Topology
 published: true
-date: 2025-11-18T13:47:12.634Z
+date: 2025-11-18T13:48:36.683Z
 tags: 
 editor: ckeditor
 dateCreated: 2025-11-18T13:15:08.821Z
 -->
 
-<h2>Pre-Migration Setup:</h2>
+<h2>Pre-Migration / Prerequisite:</h2>
 <p>This scenerio utilizes the CSM setting to start a session in GC mode. This is useful when the need arises for keeping steady state Global Mirror running but replacing a new array. The steps outlined involves adding a GC session off the GM secondarys. Once new GC session is created at migration it will be converted to a GM session replacing the existing.&nbsp;</p>
-<p><strong><u>Prerequisites:</u></strong></p>
 <ul>
   <li>Running Global Mirror session</li>
   <li>A staged Global Copy session where the primary is the I2s from running Global Mirror session</li>
   <li>A staged Global Mirror session where the new primary is the new array, which is the GC secondaries for the above staged Global Copy session</li>
-  <li>Entry in the rmserver.properities file for nocopy=true for the new Global MIrror session.&nbsp;<ul>
+  <li>Entry in the rmserver.properities file for nocopy=true for the new Global MIrror session.<ul>
       <li><i>com.ibm.csm.session_name.role_pair_name.nocopy=true</i> - where session_name is the name of the session and role_pair_name is the name of the rolepair</li>
       <li>Example:<ul>
           <li><strong>com.ibm.csm.My_MGM.H1-H3.nocopy=true - </strong>where My_MGM is the name of the session and H1-H3 is the role pair that I want established with no copy.</li>
@@ -31,13 +30,13 @@ dateCreated: 2025-11-18T13:15:08.821Z
 <ol>
   <li>Suspend GM session</li>
   <li>Stop when Drained for the Global Copy session</li>
-  <li>Terminate GM session&nbsp;</li>
+  <li>Terminate GM session</li>
   <li>Recover Global Copy session</li>
-  <li>Start &nbsp;H1 → H2 for new GM session&nbsp;</li>
-  <li>Wait for 100% progress. Should be a NoCopy since the property of the session was added to the CSM properties file. Session will NOT go prepared until steps below are complete.&nbsp;</li>
+  <li>Start &nbsp;H1 → H2 for new GM session</li>
+  <li>Wait for 100% progress. Should be a NoCopy since the property of the session was added to the CSM properties file. Session will NOT go prepared until steps below are complete.</li>
   <li>Remove Global Copy session</li>
   <li>Suspend new Global Mirror session</li>
-  <li>Start H1 -→ H2 for new GM session. This will remove the bidirectional replication for each copy set just leaving the desired direction. It will also allow the session to start taking CGs for session.&nbsp;</li>
+  <li>Start H1 -→ H2 for new GM session. This will remove the bidirectional replication for each copy set just leaving the desired direction. It will also allow the session to start taking CGs for session.</li>
   <li>Remove the <strong>nocopy=true</strong> in the properties file. VERY VERY IMPORTANT</li>
 </ol>
 <p>&nbsp;</p>
