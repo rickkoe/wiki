@@ -2,25 +2,42 @@
 title: Primary Migration within GMP Topology 
 description: Primary Disk Migration in GMP Topology
 published: true
-date: 2025-11-18T13:18:26.530Z
+date: 2025-11-18T13:47:12.634Z
 tags: 
 editor: ckeditor
 dateCreated: 2025-11-18T13:15:08.821Z
 -->
 
-<p>= Pre-Migration Setup:</p>
-<p>1. Export Copy sets from the existing MGM session.</p>
-<p>2. Create a MT MM-GM session and import the copy sets from step 1</p>
-<p>3. On the new MT MM-GM session, click on the Modify link for the H1-J3 and H2-J3 Consistency Group in the session details panel, and set the value to match the value in the existing MGM session.</p>
-<p>4. Set property to Manage H1-H2 with Hyperswap on the new MT MM-GM session.</p>
-<p>5. Update properties on the new MT MM-GM session for any non default values that were set on the existing MGM session.</p>
-<p>&nbsp;</p>
-<p>= CutOver(When ready to migrate):</p>
-<p>1. On Server Properties add "csm.server.startmm_in_gcmode=false". &nbsp; This property will prevent CSM from attempting to start the new MT MM-GM pairs in GC mode first.</p>
-<p>2. Uncheck the "Manage H1-H2 with HyperSwap" on the existing MGM session. &nbsp;This will purge the HyperSwap configuration so that the new session can load it. Do this action for both MM and MGM session if they both exist and tied together.</p>
-<p>3. Issue Start H1-&gt;H2-&gt;H3 command on the new MT MM-GM session IMPORTANT: &nbsp;Make sure you issue the cascaded h1h2h3 command. &nbsp;The MT h1h2 h1h3 command will show up on the start.</p>
-<p>4. Wait until session assimilates all the existing pairs and then loads the HyperSwap configuration.</p>
-<p>5. Delete the existing MGM session from the GUI. &nbsp;This removes the brains from CSM without touching the hardware.</p>
-<p>6. Remove or comment out the "csm.server.startmm_in_gcmode=false" property from Server Properties.</p>
-<p>7. &nbsp;Enable HyperSwap for the sessions.</p>
+<h2>Pre-Migration Setup:</h2>
+<p>This scenerio utilizes the CSM setting to start a session in GC mode. This is useful when the need arises for keeping steady state Global Mirror running but replacing a new array. The steps outlined involves adding a GC session off the GM secondarys. Once new GC session is created at migration it will be converted to a GM session replacing the existing.&nbsp;</p>
+<p><strong><u>Prerequisites:</u></strong></p>
+<ul>
+  <li>Running Global Mirror session</li>
+  <li>A staged Global Copy session where the primary is the I2s from running Global Mirror session</li>
+  <li>A staged Global Mirror session where the new primary is the new array, which is the GC secondaries for the above staged Global Copy session</li>
+  <li>Entry in the rmserver.properities file for nocopy=true for the new Global MIrror session.&nbsp;<ul>
+      <li><i>com.ibm.csm.session_name.role_pair_name.nocopy=true</i> - where session_name is the name of the session and role_pair_name is the name of the rolepair</li>
+      <li>Example:<ul>
+          <li><strong>com.ibm.csm.My_MGM.H1-H3.nocopy=true - </strong>where My_MGM is the name of the session and H1-H3 is the role pair that I want established with no copy.</li>
+          <li><i>&nbsp;</i>** Replace all spaces with "_" in session name. &nbsp;Property is case sensitive.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h2>Procedure:</h2>
+<p>&nbsp;* Production Global Mirror and the staged Global Copy &nbsp;session should be running. Global Copy should be in state of prepared and 100%. Global Mirror should be prepared state &amp; normal.&nbsp;</p>
+<p>&nbsp;** HOST IO should be quiesced to ensure consistency.&nbsp;</p>
+<ol>
+  <li>Suspend GM session</li>
+  <li>Stop when Drained for the Global Copy session</li>
+  <li>Terminate GM session&nbsp;</li>
+  <li>Recover Global Copy session</li>
+  <li>Start &nbsp;H1 → H2 for new GM session&nbsp;</li>
+  <li>Wait for 100% progress. Should be a NoCopy since the property of the session was added to the CSM properties file. Session will NOT go prepared until steps below are complete.&nbsp;</li>
+  <li>Remove Global Copy session</li>
+  <li>Suspend new Global Mirror session</li>
+  <li>Start H1 -→ H2 for new GM session. This will remove the bidirectional replication for each copy set just leaving the desired direction. It will also allow the session to start taking CGs for session.&nbsp;</li>
+  <li>Remove the <strong>nocopy=true</strong> in the properties file. VERY VERY IMPORTANT</li>
+</ol>
 <p>&nbsp;</p>
