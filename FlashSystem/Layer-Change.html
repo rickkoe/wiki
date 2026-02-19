@@ -2,7 +2,7 @@
 title: Changing FlashSystem Layer
 description: Use when partnership needs to be established but the 2 systems are using different layers. Should be going layer replication
 published: true
-date: 2026-02-19T17:14:08.050Z
+date: 2026-02-19T17:15:36.402Z
 tags: 
 editor: ckeditor
 dateCreated: 2026-02-19T16:56:15.481Z
@@ -19,13 +19,13 @@ dateCreated: 2026-02-19T16:56:15.481Z
   <li>(CLI) On&nbsp;<strong>FCIP-ROS</strong>: &nbsp;Disable FCIP tunnel to&nbsp;<strong>FCIP-NAL</strong></li>
 </ol>
 <p>    fabricshow</p>
-<p>    portdisable 24</p>
+<p>    portdisable <span class="text-tiny">##&nbsp;</span></p>
 <p>    fabricshow</p>
 <ol>
   <li>(CLI) On&nbsp;<strong>FCIP-Temp</strong>: &nbsp;Disable FCIP tunnel to<strong>&nbsp;FCIP-ASH</strong></li>
 </ol>
 <p>    fabricshow</p>
-<p>    portdisable 24</p>
+<p>    portdisable <span class="text-tiny">##</span></p>
 <p>    fabricshow</p>
 <ol>
   <li>(CLI) on&nbsp;FS9200<strong>: &nbsp;</strong>Change the system layer to replication</li>
@@ -43,14 +43,14 @@ dateCreated: 2026-02-19T16:56:15.481Z
   <li>(CLI) On&nbsp;<strong>FCIP-ROS</strong>: &nbsp;Enable FCIP tunnel to&nbsp;<strong>FCIP-NAL</strong></li>
 </ol>
 <p>    fabricshow</p>
-<p>    portenable 24</p>
+<p>    portenable <span class="text-tiny">##</span></p>
 <p>    fabricshow</p>
 <p>    switchshow</p>
 <ol>
   <li>(CLI) On&nbsp;<strong>FCIP-Temp</strong>: &nbsp;Disable FCIP tunnel to&nbsp;<strong>FCIP-ASH</strong></li>
 </ol>
 <p>    fabricshow</p>
-<p>    portenable 24</p>
+<p>    portenable <span class="text-tiny">##</span></p>
 <p>    fabricshow</p>
 <p>    switchshow</p>
 <ol>
